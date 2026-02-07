@@ -1,0 +1,260 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* AquaPulse Ocean Monitoring Design System
+   Inspired by deep ocean aesthetics and command center UIs
+   All colors in HSL for proper theming */
+
+@layer base {
+  :root {
+    /* Core Ocean Palette */
+    --background: 222 47% 6%;
+    --foreground: 200 20% 95%;
+
+    --card: 222 40% 10%;
+    --card-foreground: 200 20% 95%;
+
+    --popover: 222 40% 8%;
+    --popover-foreground: 200 20% 95%;
+
+    /* Ocean Blue Primary */
+    --primary: 199 89% 48%;
+    --primary-foreground: 222 47% 6%;
+
+    /* Teal Secondary */
+    --secondary: 168 84% 40%;
+    --secondary-foreground: 222 47% 6%;
+
+    /* Deep Ocean Muted */
+    --muted: 222 30% 18%;
+    --muted-foreground: 200 15% 60%;
+
+    /* Teal Accent */
+    --accent: 174 72% 45%;
+    --accent-foreground: 222 47% 6%;
+
+    /* Coral Destructive/Alert */
+    --destructive: 24 95% 53%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 222 30% 20%;
+    --input: 222 30% 15%;
+    --ring: 199 89% 48%;
+
+    --radius: 0.75rem;
+
+    /* Custom Ocean Variables */
+    --ocean-deep: 222 47% 6%;
+    --ocean-surface: 200 80% 50%;
+    --ocean-glow: 180 100% 60%;
+    --ocean-warning: 38 92% 50%;
+    --ocean-critical: 0 72% 51%;
+    --ocean-excellent: 142 71% 45%;
+
+    /* Gradients */
+    --gradient-ocean: linear-gradient(135deg, hsl(222 47% 6%) 0%, hsl(210 50% 15%) 50%, hsl(200 60% 20%) 100%);
+    --gradient-glow: linear-gradient(180deg, hsl(199 89% 48% / 0.2) 0%, transparent 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(222 47% 6% / 0.7) 0%, hsl(222 47% 6% / 0.9) 100%);
+
+    /* Shadows */
+    --shadow-glow: 0 0 30px hsl(199 89% 48% / 0.3);
+    --shadow-card: 0 8px 32px hsl(222 47% 6% / 0.4);
+    --shadow-elevated: 0 16px 48px hsl(222 47% 6% / 0.6);
+
+    /* Sidebar - Command Center Style */
+    --sidebar-background: 222 40% 8%;
+    --sidebar-foreground: 200 20% 90%;
+    --sidebar-primary: 199 89% 48%;
+    --sidebar-primary-foreground: 222 47% 6%;
+    --sidebar-accent: 222 30% 15%;
+    --sidebar-accent-foreground: 200 20% 90%;
+    --sidebar-border: 222 30% 18%;
+    --sidebar-ring: 199 89% 48%;
+
+    /* Chart Colors */
+    --chart-1: 199 89% 48%;
+    --chart-2: 168 84% 40%;
+    --chart-3: 174 72% 45%;
+    --chart-4: 38 92% 50%;
+    --chart-5: 0 72% 51%;
+  }
+
+  /* Light mode variant (optional, defaults to dark) */
+  .light {
+    --background: 200 20% 98%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 199 89% 40%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 168 84% 35%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 200 20% 94%;
+    --muted-foreground: 222 30% 40%;
+    --accent: 174 72% 40%;
+    --accent-foreground: 0 0% 100%;
+    --border: 200 20% 88%;
+    --input: 200 20% 92%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Custom scrollbar for ocean theme */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--primary) / 0.5);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.7);
+  }
+}
+
+@layer components {
+  /* Glass morphism cards */
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-xl border border-border/50;
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Glowing elements */
+  .glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .glow-text {
+    text-shadow: 0 0 20px hsl(var(--primary) / 0.5);
+  }
+
+  /* Pulse animation for alerts */
+  .pulse-ring {
+    animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-ring {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.5;
+      transform: scale(1.05);
+    }
+  }
+
+  /* Ocean wave animation */
+  .wave-animation {
+    animation: wave 3s ease-in-out infinite;
+  }
+
+  @keyframes wave {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+
+  /* Status indicators */
+  .status-excellent {
+    @apply bg-green-500/20 text-green-400 border-green-500/30;
+  }
+
+  .status-good {
+    @apply bg-primary/20 text-primary border-primary/30;
+  }
+
+  .status-poor {
+    @apply bg-orange-500/20 text-orange-400 border-orange-500/30;
+  }
+
+  .status-critical {
+    @apply bg-red-500/20 text-red-400 border-red-500/30;
+  }
+
+  /* Ticker animation */
+  .ticker-scroll {
+    animation: ticker 20s linear infinite;
+  }
+
+  @keyframes ticker {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Map container styles */
+  .leaflet-container {
+    @apply rounded-lg;
+    background: hsl(var(--card)) !important;
+  }
+
+  .leaflet-tile-pane {
+    filter: saturate(0.8) brightness(0.85);
+  }
+
+  /* Recharts customization */
+  .recharts-cartesian-grid line {
+    stroke: hsl(var(--border)) !important;
+  }
+
+  .recharts-text {
+    fill: hsl(var(--muted-foreground)) !important;
+  }
+}
+
+@layer utilities {
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+  }
+
+  /* Ocean gradient background */
+  .bg-ocean-gradient {
+    background: var(--gradient-ocean);
+  }
+
+  /* Animated gradient border */
+  .border-gradient {
+    position: relative;
+  }
+
+  .border-gradient::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask-composite: xor;
+  }
+}
