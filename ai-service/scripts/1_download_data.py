@@ -23,8 +23,8 @@ try:
     # Use the default workspace and correct project name
     project = rf.workspace().project("trash-underwater")
 
-    # Download directly to the local folder (use supported format like 'yolov8')
-    dataset = project.version(1).download("yolov8", location=str(DATASET_DIR))
+    # Download directly to the local folder (use supported format like 'yolov11')
+    dataset = project.version(1).download("yolov11", location=str(DATASET_DIR))
 
     if hasattr(dataset, 'location') and dataset.location:
         print("\n✅ Data Downloaded Successfully!")

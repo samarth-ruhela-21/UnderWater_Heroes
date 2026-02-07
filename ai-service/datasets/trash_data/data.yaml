@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 15
+names: ['Mask', 'can', 'cellphone', 'electronics', 'gbottle', 'glove', 'metal', 'misc', 'net', 'pbag', 'pbottle', 'plastic', 'rod', 'sunglasses', 'tire']
+
+roboflow:
+  workspace: faiza-rehman
+  project: underwater-garbage-detection-d4dnn
+  version: 1
+  license: Public Domain
+  url: https://universe.roboflow.com/faiza-rehman/underwater-garbage-detection-d4dnn/dataset/1
