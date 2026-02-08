@@ -1,802 +1,1069 @@
-// import { motion, AnimatePresence } from 'framer-motion';
-// import { useState, useRef, useCallback } from 'react';
-// import { Link } from 'react-router-dom';
-// import { ArrowLeft, Camera, CheckCircle, Loader2, MapPin, Upload, Waves, X, AlertTriangle } from 'lucide-react';
-// import { Button } from '@/components/ui/button';
-// import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-// import { Progress } from '@/components/ui/progress';
-// import { Badge } from '@/components/ui/badge';
-// import { toast } from 'sonner';
+// // import { motion, AnimatePresence } from 'framer-motion';
+// // import { useState, useRef, useCallback } from 'react';
+// // import { Link } from 'react-router-dom';
+// // import { ArrowLeft, Camera, CheckCircle, Loader2, MapPin, Upload, Waves, X, AlertTriangle } from 'lucide-react';
+// // import { Button } from '@/components/ui/button';
+// // import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+// // import { Progress } from '@/components/ui/progress';
+// // import { Badge } from '@/components/ui/badge';
+// // import { toast } from 'sonner';
 
-// interface DetectionResult {
-//   plasticCount: number;
-//   items: string[];
-//   confidence: number;
-//   isPolluted: boolean;
-//   hazardLevel: 'Low' | 'Medium' | 'High';
-//   boundingBoxes: { x: number; y: number; width: number; height: number; label: string }[];
-// }
+// // interface DetectionResult {
+// //   plasticCount: number;
+// //   items: string[];
+// //   confidence: number;
+// //   isPolluted: boolean;
+// //   hazardLevel: 'Low' | 'Medium' | 'High';
+// //   boundingBoxes: { x: number; y: number; width: number; height: number; label: string }[];
+// // }
 
-// export default function Report() {
-//   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-//   const [isAnalyzing, setIsAnalyzing] = useState(false);
-//   const [analysisProgress, setAnalysisProgress] = useState(0);
-//   const [detectionResult, setDetectionResult] = useState<DetectionResult | null>(null);
-//   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
-//   const [isSubmitted, setIsSubmitted] = useState(false);
-//   const fileInputRef = useRef<HTMLInputElement>(null);
+// // export default function Report() {
+// //   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+// //   const [isAnalyzing, setIsAnalyzing] = useState(false);
+// //   const [analysisProgress, setAnalysisProgress] = useState(0);
+// //   const [detectionResult, setDetectionResult] = useState<DetectionResult | null>(null);
+// //   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
+// //   const [isSubmitted, setIsSubmitted] = useState(false);
+// //   const fileInputRef = useRef<HTMLInputElement>(null);
 
-//   const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-//     const file = e.target.files?.[0];
-//     if (file) {
-//       const reader = new FileReader();
-//       reader.onload = (e) => {
-//         setSelectedImage(e.target?.result as string);
-//         setDetectionResult(null);
-//         setIsSubmitted(false);
-//       };
-//       reader.readAsDataURL(file);
-//     }
-//   }, []);
+// //   const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+// //     const file = e.target.files?.[0];
+// //     if (file) {
+// //       const reader = new FileReader();
+// //       reader.onload = (e) => {
+// //         setSelectedImage(e.target?.result as string);
+// //         setDetectionResult(null);
+// //         setIsSubmitted(false);
+// //       };
+// //       reader.readAsDataURL(file);
+// //     }
+// //   }, []);
 
-//   const getLocation = useCallback(() => {
-//     if (navigator.geolocation) {
-//       navigator.geolocation.getCurrentPosition(
-//         (position) => {
-//           setLocation({
-//             lat: position.coords.latitude,
-//             lng: position.coords.longitude,
-//           });
-//           toast.success('Location captured successfully');
-//         },
-//         () => {
-//           toast.error('Unable to get location. Please enable GPS.');
-//           // Default to Mumbai
-//           setLocation({ lat: 19.076, lng: 72.877 });
-//         }
-//       );
-//     }
-//   }, []);
+// //   const getLocation = useCallback(() => {
+// //     if (navigator.geolocation) {
+// //       navigator.geolocation.getCurrentPosition(
+// //         (position) => {
+// //           setLocation({
+// //             lat: position.coords.latitude,
+// //             lng: position.coords.longitude,
+// //           });
+// //           toast.success('Location captured successfully');
+// //         },
+// //         () => {
+// //           toast.error('Unable to get location. Please enable GPS.');
+// //           // Default to Mumbai
+// //           setLocation({ lat: 19.076, lng: 72.877 });
+// //         }
+// //       );
+// //     }
+// //   }, []);
 
-//   const simulateAIAnalysis = useCallback(() => {
-//     if (!selectedImage) return;
+// //   const simulateAIAnalysis = useCallback(() => {
+// //     if (!selectedImage) return;
 
-//     setIsAnalyzing(true);
-//     setAnalysisProgress(0);
+// //     setIsAnalyzing(true);
+// //     setAnalysisProgress(0);
 
-//     // Simulate AI processing with progress updates
-//     const progressInterval = setInterval(() => {
-//       setAnalysisProgress((prev) => {
-//         if (prev >= 90) {
-//           clearInterval(progressInterval);
-//           return 90;
-//         }
-//         return prev + 10;
-//       });
-//     }, 200);
+// //     // Simulate AI processing with progress updates
+// //     const progressInterval = setInterval(() => {
+// //       setAnalysisProgress((prev) => {
+// //         if (prev >= 90) {
+// //           clearInterval(progressInterval);
+// //           return 90;
+// //         }
+// //         return prev + 10;
+// //       });
+// //     }, 200);
 
-//     // Simulate AI response after 2.5 seconds
-//     setTimeout(() => {
-//       clearInterval(progressInterval);
-//       setAnalysisProgress(100);
+// //     // Simulate AI response after 2.5 seconds
+// //     setTimeout(() => {
+// //       clearInterval(progressInterval);
+// //       setAnalysisProgress(100);
 
-//       // Simulated detection result
-//       const isPolluted = Math.random() > 0.3;
-//       const plasticCount = isPolluted ? Math.floor(Math.random() * 8) + 2 : Math.floor(Math.random() * 2);
+// //       // Simulated detection result
+// //       const isPolluted = Math.random() > 0.3;
+// //       const plasticCount = isPolluted ? Math.floor(Math.random() * 8) + 2 : Math.floor(Math.random() * 2);
 
-//       const possibleItems = ['Bottle', 'Plastic Bag', 'Fishing Net', 'Cup', 'Container', 'Styrofoam', 'Oil Slick'];
-//       const detectedItems = isPolluted
-//         ? possibleItems.slice(0, Math.floor(Math.random() * 4) + 2)
-//         : possibleItems.slice(0, 1);
+// //       const possibleItems = ['Bottle', 'Plastic Bag', 'Fishing Net', 'Cup', 'Container', 'Styrofoam', 'Oil Slick'];
+// //       const detectedItems = isPolluted
+// //         ? possibleItems.slice(0, Math.floor(Math.random() * 4) + 2)
+// //         : possibleItems.slice(0, 1);
 
-//       const result: DetectionResult = {
-//         plasticCount,
-//         items: detectedItems,
-//         confidence: 0.75 + Math.random() * 0.2,
-//         isPolluted,
-//         hazardLevel: plasticCount > 5 ? 'High' : plasticCount > 2 ? 'Medium' : 'Low',
-//         boundingBoxes: detectedItems.map((item, i) => ({
-//           x: 20 + Math.random() * 40,
-//           y: 20 + Math.random() * 40,
-//           width: 15 + Math.random() * 20,
-//           height: 15 + Math.random() * 20,
-//           label: item,
-//         })),
-//       };
+// //       const result: DetectionResult = {
+// //         plasticCount,
+// //         items: detectedItems,
+// //         confidence: 0.75 + Math.random() * 0.2,
+// //         isPolluted,
+// //         hazardLevel: plasticCount > 5 ? 'High' : plasticCount > 2 ? 'Medium' : 'Low',
+// //         boundingBoxes: detectedItems.map((item, i) => ({
+// //           x: 20 + Math.random() * 40,
+// //           y: 20 + Math.random() * 40,
+// //           width: 15 + Math.random() * 20,
+// //           height: 15 + Math.random() * 20,
+// //           label: item,
+// //         })),
+// //       };
 
-//       setDetectionResult(result);
-//       setIsAnalyzing(false);
+// //       setDetectionResult(result);
+// //       setIsAnalyzing(false);
 
-//       if (result.isPolluted) {
-//         toast.warning(`Detected ${result.plasticCount} pollutant items!`);
-//       } else {
-//         toast.success('No significant pollution detected.');
-//       }
-//     }, 2500);
-//   }, [selectedImage]);
+// //       if (result.isPolluted) {
+// //         toast.warning(`Detected ${result.plasticCount} pollutant items!`);
+// //       } else {
+// //         toast.success('No significant pollution detected.');
+// //       }
+// //     }, 2500);
+// //   }, [selectedImage]);
 
-//   const handleSubmitReport = useCallback(() => {
-//     if (!detectionResult || !location) {
-//       toast.error('Please analyze image and capture location first');
-//       return;
-//     }
+// //   const handleSubmitReport = useCallback(() => {
+// //     if (!detectionResult || !location) {
+// //       toast.error('Please analyze image and capture location first');
+// //       return;
+// //     }
 
-//     setIsSubmitted(true);
-//     toast.success('Report submitted successfully! Ticket #' + Math.floor(Math.random() * 9000 + 1000) + ' created.');
-//   }, [detectionResult, location]);
+// //     setIsSubmitted(true);
+// //     toast.success('Report submitted successfully! Ticket #' + Math.floor(Math.random() * 9000 + 1000) + ' created.');
+// //   }, [detectionResult, location]);
 
-//   const hazardColors = {
-//     Low: 'bg-green-500/10 text-green-400 border-green-500/30',
-//     Medium: 'bg-orange-500/10 text-orange-400 border-orange-500/30',
-//     High: 'bg-red-500/10 text-red-400 border-red-500/30',
-//   };
+// //   const hazardColors = {
+// //     Low: 'bg-green-500/10 text-green-400 border-green-500/30',
+// //     Medium: 'bg-orange-500/10 text-orange-400 border-orange-500/30',
+// //     High: 'bg-red-500/10 text-red-400 border-red-500/30',
+// //   };
 
-//   return (
-//     <div className="min-h-screen bg-background">
-//       {/* Header */}
-//       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
-//         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-//           <div className="flex items-center gap-4">
-//             <Link to="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-//               <ArrowLeft className="w-5 h-5" />
-//               <span className="hidden sm:inline">Back</span>
-//             </Link>
-//             <div className="h-6 w-px bg-border" />
-//             <div className="flex items-center gap-2">
-//               <Camera className="w-6 h-6 text-primary" />
-//               <h1 className="text-lg font-semibold">Report Pollution</h1>
-//             </div>
-//           </div>
-//         </div>
-//       </header>
+// //   return (
+// //     <div className="min-h-screen bg-background">
+// //       {/* Header */}
+// //       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
+// //         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+// //           <div className="flex items-center gap-4">
+// //             <Link to="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+// //               <ArrowLeft className="w-5 h-5" />
+// //               <span className="hidden sm:inline">Back</span>
+// //             </Link>
+// //             <div className="h-6 w-px bg-border" />
+// //             <div className="flex items-center gap-2">
+// //               <Camera className="w-6 h-6 text-primary" />
+// //               <h1 className="text-lg font-semibold">Report Pollution</h1>
+// //             </div>
+// //           </div>
+// //         </div>
+// //       </header>
 
-//       <div className="container mx-auto px-4 py-8">
-//         <div className="max-w-4xl mx-auto">
-//           {/* Hero Text */}
-//           <motion.div
-//             initial={{ opacity: 0, y: 20 }}
-//             animate={{ opacity: 1, y: 0 }}
-//             className="text-center mb-8"
-//           >
-//             <h2 className="text-2xl md:text-3xl font-bold mb-3">
-//               <span className="gradient-text">AI-Powered</span> Pollution Detection
-//             </h2>
-//             <p className="text-muted-foreground max-w-lg mx-auto">
-//               Upload a photo of ocean pollution. Our AI will analyze it and alert authorities automatically.
-//             </p>
-//           </motion.div>
+// //       <div className="container mx-auto px-4 py-8">
+// //         <div className="max-w-4xl mx-auto">
+// //           {/* Hero Text */}
+// //           <motion.div
+// //             initial={{ opacity: 0, y: 20 }}
+// //             animate={{ opacity: 1, y: 0 }}
+// //             className="text-center mb-8"
+// //           >
+// //             <h2 className="text-2xl md:text-3xl font-bold mb-3">
+// //               <span className="gradient-text">AI-Powered</span> Pollution Detection
+// //             </h2>
+// //             <p className="text-muted-foreground max-w-lg mx-auto">
+// //               Upload a photo of ocean pollution. Our AI will analyze it and alert authorities automatically.
+// //             </p>
+// //           </motion.div>
 
-//           <div className="grid md:grid-cols-2 gap-6">
-//             {/* Upload Section */}
-//             <motion.div
-//               initial={{ opacity: 0, x: -20 }}
-//               animate={{ opacity: 1, x: 0 }}
-//               transition={{ delay: 0.1 }}
-//             >
-//               <Card className="glass-card h-full">
-//                 <CardHeader>
-//                   <CardTitle className="flex items-center gap-2">
-//                     <Upload className="w-5 h-5 text-primary" />
-//                     Upload Photo
-//                   </CardTitle>
-//                   <CardDescription>Take or upload a photo of pollution</CardDescription>
-//                 </CardHeader>
-//                 <CardContent>
-//                   <input
-//                     ref={fileInputRef}
-//                     type="file"
-//                     accept="image/*"
-//                     capture="environment"
-//                     onChange={handleFileSelect}
-//                     className="hidden"
-//                   />
+// //           <div className="grid md:grid-cols-2 gap-6">
+// //             {/* Upload Section */}
+// //             <motion.div
+// //               initial={{ opacity: 0, x: -20 }}
+// //               animate={{ opacity: 1, x: 0 }}
+// //               transition={{ delay: 0.1 }}
+// //             >
+// //               <Card className="glass-card h-full">
+// //                 <CardHeader>
+// //                   <CardTitle className="flex items-center gap-2">
+// //                     <Upload className="w-5 h-5 text-primary" />
+// //                     Upload Photo
+// //                   </CardTitle>
+// //                   <CardDescription>Take or upload a photo of pollution</CardDescription>
+// //                 </CardHeader>
+// //                 <CardContent>
+// //                   <input
+// //                     ref={fileInputRef}
+// //                     type="file"
+// //                     accept="image/*"
+// //                     capture="environment"
+// //                     onChange={handleFileSelect}
+// //                     className="hidden"
+// //                   />
 
-//                   {!selectedImage ? (
-//                     <div
-//                       onClick={() => fileInputRef.current?.click()}
-//                       className="border-2 border-dashed border-border rounded-xl p-12 text-center cursor-pointer hover:border-primary/50 transition-colors group"
-//                     >
-//                       <Camera className="w-12 h-12 mx-auto text-muted-foreground group-hover:text-primary transition-colors mb-4" />
-//                       <p className="text-sm text-muted-foreground mb-2">
-//                         Click to take photo or upload
-//                       </p>
-//                       <p className="text-xs text-muted-foreground">
-//                         Supports JPG, PNG up to 10MB
-//                       </p>
-//                     </div>
-//                   ) : (
-//                     <div className="relative">
-//                       <div className="relative aspect-video rounded-xl overflow-hidden bg-muted">
-//                         <img
-//                           src={selectedImage}
-//                           alt="Uploaded"
-//                           className="w-full h-full object-cover"
-//                         />
-//                         {/* Bounding boxes overlay */}
-//                         {detectionResult && (
-//                           <svg className="absolute inset-0 w-full h-full pointer-events-none">
-//                             {detectionResult.boundingBoxes.map((box, i) => (
-//                               <g key={i}>
-//                                 <rect
-//                                   x={`${box.x}%`}
-//                                   y={`${box.y}%`}
-//                                   width={`${box.width}%`}
-//                                   height={`${box.height}%`}
-//                                   fill="none"
-//                                   stroke="hsl(var(--destructive))"
-//                                   strokeWidth="2"
-//                                   rx="4"
-//                                 />
-//                                 <text
-//                                   x={`${box.x}%`}
-//                                   y={`${box.y - 2}%`}
-//                                   fill="hsl(var(--destructive))"
-//                                   fontSize="10"
-//                                   fontWeight="bold"
-//                                 >
-//                                   {box.label}
-//                                 </text>
-//                               </g>
-//                             ))}
-//                           </svg>
-//                         )}
-//                       </div>
-//                       <Button
-//                         variant="ghost"
-//                         size="icon"
-//                         className="absolute top-2 right-2 bg-background/80 backdrop-blur-sm"
-//                         onClick={() => {
-//                           setSelectedImage(null);
-//                           setDetectionResult(null);
-//                           setIsSubmitted(false);
-//                         }}
-//                       >
-//                         <X className="w-4 h-4" />
-//                       </Button>
-//                     </div>
-//                   )}
+// //                   {!selectedImage ? (
+// //                     <div
+// //                       onClick={() => fileInputRef.current?.click()}
+// //                       className="border-2 border-dashed border-border rounded-xl p-12 text-center cursor-pointer hover:border-primary/50 transition-colors group"
+// //                     >
+// //                       <Camera className="w-12 h-12 mx-auto text-muted-foreground group-hover:text-primary transition-colors mb-4" />
+// //                       <p className="text-sm text-muted-foreground mb-2">
+// //                         Click to take photo or upload
+// //                       </p>
+// //                       <p className="text-xs text-muted-foreground">
+// //                         Supports JPG, PNG up to 10MB
+// //                       </p>
+// //                     </div>
+// //                   ) : (
+// //                     <div className="relative">
+// //                       <div className="relative aspect-video rounded-xl overflow-hidden bg-muted">
+// //                         <img
+// //                           src={selectedImage}
+// //                           alt="Uploaded"
+// //                           className="w-full h-full object-cover"
+// //                         />
+// //                         {/* Bounding boxes overlay */}
+// //                         {detectionResult && (
+// //                           <svg className="absolute inset-0 w-full h-full pointer-events-none">
+// //                             {detectionResult.boundingBoxes.map((box, i) => (
+// //                               <g key={i}>
+// //                                 <rect
+// //                                   x={`${box.x}%`}
+// //                                   y={`${box.y}%`}
+// //                                   width={`${box.width}%`}
+// //                                   height={`${box.height}%`}
+// //                                   fill="none"
+// //                                   stroke="hsl(var(--destructive))"
+// //                                   strokeWidth="2"
+// //                                   rx="4"
+// //                                 />
+// //                                 <text
+// //                                   x={`${box.x}%`}
+// //                                   y={`${box.y - 2}%`}
+// //                                   fill="hsl(var(--destructive))"
+// //                                   fontSize="10"
+// //                                   fontWeight="bold"
+// //                                 >
+// //                                   {box.label}
+// //                                 </text>
+// //                               </g>
+// //                             ))}
+// //                           </svg>
+// //                         )}
+// //                       </div>
+// //                       <Button
+// //                         variant="ghost"
+// //                         size="icon"
+// //                         className="absolute top-2 right-2 bg-background/80 backdrop-blur-sm"
+// //                         onClick={() => {
+// //                           setSelectedImage(null);
+// //                           setDetectionResult(null);
+// //                           setIsSubmitted(false);
+// //                         }}
+// //                       >
+// //                         <X className="w-4 h-4" />
+// //                       </Button>
+// //                     </div>
+// //                   )}
 
-//                   {/* Location Button */}
-//                   <div className="mt-4 flex items-center gap-3">
-//                     <Button
-//                       variant="outline"
-//                       size="sm"
-//                       onClick={getLocation}
-//                       className="gap-2"
-//                     >
-//                       <MapPin className="w-4 h-4" />
-//                       {location ? 'Location Captured' : 'Capture Location'}
-//                     </Button>
-//                     {location && (
-//                       <span className="text-xs text-muted-foreground">
-//                         {location.lat.toFixed(4)}, {location.lng.toFixed(4)}
-//                       </span>
-//                     )}
-//                   </div>
+// //                   {/* Location Button */}
+// //                   <div className="mt-4 flex items-center gap-3">
+// //                     <Button
+// //                       variant="outline"
+// //                       size="sm"
+// //                       onClick={getLocation}
+// //                       className="gap-2"
+// //                     >
+// //                       <MapPin className="w-4 h-4" />
+// //                       {location ? 'Location Captured' : 'Capture Location'}
+// //                     </Button>
+// //                     {location && (
+// //                       <span className="text-xs text-muted-foreground">
+// //                         {location.lat.toFixed(4)}, {location.lng.toFixed(4)}
+// //                       </span>
+// //                     )}
+// //                   </div>
 
-//                   {/* Analyze Button */}
-//                   {selectedImage && !detectionResult && (
-//                     <Button
-//                       className="w-full mt-4 gap-2"
-//                       onClick={simulateAIAnalysis}
-//                       disabled={isAnalyzing}
-//                     >
-//                       {isAnalyzing ? (
-//                         <>
-//                           <Loader2 className="w-4 h-4 animate-spin" />
-//                           Analyzing...
-//                         </>
-//                       ) : (
-//                         <>
-//                           <Waves className="w-4 h-4" />
-//                           Analyze with AI
-//                         </>
-//                       )}
-//                     </Button>
-//                   )}
+// //                   {/* Analyze Button */}
+// //                   {selectedImage && !detectionResult && (
+// //                     <Button
+// //                       className="w-full mt-4 gap-2"
+// //                       onClick={simulateAIAnalysis}
+// //                       disabled={isAnalyzing}
+// //                     >
+// //                       {isAnalyzing ? (
+// //                         <>
+// //                           <Loader2 className="w-4 h-4 animate-spin" />
+// //                           Analyzing...
+// //                         </>
+// //                       ) : (
+// //                         <>
+// //                           <Waves className="w-4 h-4" />
+// //                           Analyze with AI
+// //                         </>
+// //                       )}
+// //                     </Button>
+// //                   )}
 
-//                   {/* Analysis Progress */}
-//                   <AnimatePresence>
-//                     {isAnalyzing && (
-//                       <motion.div
-//                         initial={{ opacity: 0, height: 0 }}
-//                         animate={{ opacity: 1, height: 'auto' }}
-//                         exit={{ opacity: 0, height: 0 }}
-//                         className="mt-4"
-//                       >
-//                         <div className="flex justify-between text-xs text-muted-foreground mb-2">
-//                           <span>Scanning for pollutants...</span>
-//                           <span>{analysisProgress}%</span>
-//                         </div>
-//                         <Progress value={analysisProgress} className="h-2" />
-//                       </motion.div>
-//                     )}
-//                   </AnimatePresence>
-//                 </CardContent>
-//               </Card>
-//             </motion.div>
+// //                   {/* Analysis Progress */}
+// //                   <AnimatePresence>
+// //                     {isAnalyzing && (
+// //                       <motion.div
+// //                         initial={{ opacity: 0, height: 0 }}
+// //                         animate={{ opacity: 1, height: 'auto' }}
+// //                         exit={{ opacity: 0, height: 0 }}
+// //                         className="mt-4"
+// //                       >
+// //                         <div className="flex justify-between text-xs text-muted-foreground mb-2">
+// //                           <span>Scanning for pollutants...</span>
+// //                           <span>{analysisProgress}%</span>
+// //                         </div>
+// //                         <Progress value={analysisProgress} className="h-2" />
+// //                       </motion.div>
+// //                     )}
+// //                   </AnimatePresence>
+// //                 </CardContent>
+// //               </Card>
+// //             </motion.div>
 
-//             {/* Results Section */}
-//             <motion.div
-//               initial={{ opacity: 0, x: 20 }}
-//               animate={{ opacity: 1, x: 0 }}
-//               transition={{ delay: 0.2 }}
-//             >
-//               <Card className="glass-card h-full">
-//                 <CardHeader>
-//                   <CardTitle className="flex items-center gap-2">
-//                     <AlertTriangle className="w-5 h-5 text-primary" />
-//                     Analysis Results
-//                   </CardTitle>
-//                   <CardDescription>AI detection output</CardDescription>
-//                 </CardHeader>
-//                 <CardContent>
-//                   <AnimatePresence mode="wait">
-//                     {!detectionResult && !isSubmitted ? (
-//                       <motion.div
-//                         key="empty"
-//                         initial={{ opacity: 0 }}
-//                         animate={{ opacity: 1 }}
-//                         exit={{ opacity: 0 }}
-//                         className="text-center py-12"
-//                       >
-//                         <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-//                           <Waves className="w-8 h-8 text-muted-foreground" />
-//                         </div>
-//                         <p className="text-sm text-muted-foreground">
-//                           Upload and analyze an image to see results
-//                         </p>
-//                       </motion.div>
-//                     ) : isSubmitted ? (
-//                       <motion.div
-//                         key="submitted"
-//                         initial={{ opacity: 0, scale: 0.9 }}
-//                         animate={{ opacity: 1, scale: 1 }}
-//                         className="text-center py-8"
-//                       >
-//                         <motion.div
-//                           initial={{ scale: 0 }}
-//                           animate={{ scale: 1 }}
-//                           transition={{ type: 'spring', delay: 0.2 }}
-//                           className="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4"
-//                         >
-//                           <CheckCircle className="w-10 h-10 text-green-400" />
-//                         </motion.div>
-//                         <h3 className="text-lg font-semibold mb-2">Report Submitted!</h3>
-//                         <p className="text-sm text-muted-foreground mb-4">
-//                           Ticket #{Math.floor(Math.random() * 9000 + 1000)} created
-//                         </p>
-//                         <p className="text-xs text-muted-foreground">
-//                           Alert sent to Mumbai Port Authority
-//                         </p>
-//                         <Button
-//                           variant="outline"
-//                           className="mt-6"
-//                           onClick={() => {
-//                             setSelectedImage(null);
-//                             setDetectionResult(null);
-//                             setIsSubmitted(false);
-//                             setLocation(null);
-//                           }}
-//                         >
-//                           Submit Another Report
-//                         </Button>
-//                       </motion.div>
-//                     ) : (
-//                       <motion.div
-//                         key="results"
-//                         initial={{ opacity: 0 }}
-//                         animate={{ opacity: 1 }}
-//                         className="space-y-4"
-//                       >
-//                         {/* Hazard Level */}
-//                         <div className="flex items-center justify-between">
-//                           <span className="text-sm text-muted-foreground">Hazard Level</span>
-//                           <Badge className={hazardColors[detectionResult!.hazardLevel]}>
-//                             {detectionResult!.hazardLevel}
-//                           </Badge>
-//                         </div>
+// //             {/* Results Section */}
+// //             <motion.div
+// //               initial={{ opacity: 0, x: 20 }}
+// //               animate={{ opacity: 1, x: 0 }}
+// //               transition={{ delay: 0.2 }}
+// //             >
+// //               <Card className="glass-card h-full">
+// //                 <CardHeader>
+// //                   <CardTitle className="flex items-center gap-2">
+// //                     <AlertTriangle className="w-5 h-5 text-primary" />
+// //                     Analysis Results
+// //                   </CardTitle>
+// //                   <CardDescription>AI detection output</CardDescription>
+// //                 </CardHeader>
+// //                 <CardContent>
+// //                   <AnimatePresence mode="wait">
+// //                     {!detectionResult && !isSubmitted ? (
+// //                       <motion.div
+// //                         key="empty"
+// //                         initial={{ opacity: 0 }}
+// //                         animate={{ opacity: 1 }}
+// //                         exit={{ opacity: 0 }}
+// //                         className="text-center py-12"
+// //                       >
+// //                         <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+// //                           <Waves className="w-8 h-8 text-muted-foreground" />
+// //                         </div>
+// //                         <p className="text-sm text-muted-foreground">
+// //                           Upload and analyze an image to see results
+// //                         </p>
+// //                       </motion.div>
+// //                     ) : isSubmitted ? (
+// //                       <motion.div
+// //                         key="submitted"
+// //                         initial={{ opacity: 0, scale: 0.9 }}
+// //                         animate={{ opacity: 1, scale: 1 }}
+// //                         className="text-center py-8"
+// //                       >
+// //                         <motion.div
+// //                           initial={{ scale: 0 }}
+// //                           animate={{ scale: 1 }}
+// //                           transition={{ type: 'spring', delay: 0.2 }}
+// //                           className="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4"
+// //                         >
+// //                           <CheckCircle className="w-10 h-10 text-green-400" />
+// //                         </motion.div>
+// //                         <h3 className="text-lg font-semibold mb-2">Report Submitted!</h3>
+// //                         <p className="text-sm text-muted-foreground mb-4">
+// //                           Ticket #{Math.floor(Math.random() * 9000 + 1000)} created
+// //                         </p>
+// //                         <p className="text-xs text-muted-foreground">
+// //                           Alert sent to Mumbai Port Authority
+// //                         </p>
+// //                         <Button
+// //                           variant="outline"
+// //                           className="mt-6"
+// //                           onClick={() => {
+// //                             setSelectedImage(null);
+// //                             setDetectionResult(null);
+// //                             setIsSubmitted(false);
+// //                             setLocation(null);
+// //                           }}
+// //                         >
+// //                           Submit Another Report
+// //                         </Button>
+// //                       </motion.div>
+// //                     ) : (
+// //                       <motion.div
+// //                         key="results"
+// //                         initial={{ opacity: 0 }}
+// //                         animate={{ opacity: 1 }}
+// //                         className="space-y-4"
+// //                       >
+// //                         {/* Hazard Level */}
+// //                         <div className="flex items-center justify-between">
+// //                           <span className="text-sm text-muted-foreground">Hazard Level</span>
+// //                           <Badge className={hazardColors[detectionResult!.hazardLevel]}>
+// //                             {detectionResult!.hazardLevel}
+// //                           </Badge>
+// //                         </div>
 
-//                         {/* Stats */}
-//                         <div className="grid grid-cols-2 gap-4">
-//                           <div className="bg-muted/50 rounded-lg p-4 text-center">
-//                             <div className="text-3xl font-bold text-destructive">
-//                               {detectionResult!.plasticCount}
-//                             </div>
-//                             <div className="text-xs text-muted-foreground">Items Detected</div>
-//                           </div>
-//                           <div className="bg-muted/50 rounded-lg p-4 text-center">
-//                             <div className="text-3xl font-bold text-primary">
-//                               {Math.round(detectionResult!.confidence * 100)}%
-//                             </div>
-//                             <div className="text-xs text-muted-foreground">Confidence</div>
-//                           </div>
-//                         </div>
+// //                         {/* Stats */}
+// //                         <div className="grid grid-cols-2 gap-4">
+// //                           <div className="bg-muted/50 rounded-lg p-4 text-center">
+// //                             <div className="text-3xl font-bold text-destructive">
+// //                               {detectionResult!.plasticCount}
+// //                             </div>
+// //                             <div className="text-xs text-muted-foreground">Items Detected</div>
+// //                           </div>
+// //                           <div className="bg-muted/50 rounded-lg p-4 text-center">
+// //                             <div className="text-3xl font-bold text-primary">
+// //                               {Math.round(detectionResult!.confidence * 100)}%
+// //                             </div>
+// //                             <div className="text-xs text-muted-foreground">Confidence</div>
+// //                           </div>
+// //                         </div>
 
-//                         {/* Detected Items */}
-//                         <div>
-//                           <span className="text-sm text-muted-foreground block mb-2">Detected Items</span>
-//                           <div className="flex flex-wrap gap-2">
-//                             {detectionResult!.items.map((item) => (
-//                               <Badge key={item} variant="outline">
-//                                 {item}
-//                               </Badge>
-//                             ))}
-//                           </div>
-//                         </div>
+// //                         {/* Detected Items */}
+// //                         <div>
+// //                           <span className="text-sm text-muted-foreground block mb-2">Detected Items</span>
+// //                           <div className="flex flex-wrap gap-2">
+// //                             {detectionResult!.items.map((item) => (
+// //                               <Badge key={item} variant="outline">
+// //                                 {item}
+// //                               </Badge>
+// //                             ))}
+// //                           </div>
+// //                         </div>
 
-//                         {/* Submit Button */}
-//                         <Button
-//                           className="w-full mt-4 gap-2"
-//                           onClick={handleSubmitReport}
-//                           disabled={!location}
-//                         >
-//                           <AlertTriangle className="w-4 h-4" />
-//                           Alert Authorities
-//                         </Button>
+// //                         {/* Submit Button */}
+// //                         <Button
+// //                           className="w-full mt-4 gap-2"
+// //                           onClick={handleSubmitReport}
+// //                           disabled={!location}
+// //                         >
+// //                           <AlertTriangle className="w-4 h-4" />
+// //                           Alert Authorities
+// //                         </Button>
 
-//                         {!location && (
-//                           <p className="text-xs text-center text-muted-foreground">
-//                             Please capture your location first
-//                           </p>
-//                         )}
-//                       </motion.div>
-//                     )}
-//                   </AnimatePresence>
-//                 </CardContent>
-//               </Card>
-//             </motion.div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////
+// //                         {!location && (
+// //                           <p className="text-xs text-center text-muted-foreground">
+// //                             Please capture your location first
+// //                           </p>
+// //                         )}
+// //                       </motion.div>
+// //                     )}
+// //                   </AnimatePresence>
+// //                 </CardContent>
+// //               </Card>
+// //             </motion.div>
+// //           </div>
+// //         </div>
+// //       </div>
+// //     </div>
+// //   );
+// // }
 
 
-// import { motion, AnimatePresence } from 'framer-motion';
-// import { useState, useRef, useCallback, useEffect } from 'react';
-// import { Link } from 'react-router-dom';
-// import { ArrowLeft, Camera, CheckCircle, Loader2, MapPin, RefreshCw, AlertTriangle, Video, XCircle } from 'lucide-react';
-// import { Button } from '@/components/ui/button';
-// import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-// import { Badge } from '@/components/ui/badge';
-// import { toast } from 'sonner';
-// import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
-// // --- Types ---
-// interface DetectionResult {
-//   plasticCount: number;
-//   items: string[];
-//   confidence: number;
-//   isPolluted: boolean;
-//   hazardLevel: 'Low' | 'Medium' | 'High';
-//   boundingBoxes: { x: number; y: number; width: number; height: number; label: string }[];
-// }
+// /////////////////////////////////////////////////////////////////////////////////////////////
 
-// interface LocationData {
-//   lat: number;
-//   lng: number;
-//   accuracy: number;
-// }
 
-// // --- Constants ---
-// // Replace with your actual Google Maps API Key
-// const GOOGLE_MAPS_API_KEY = "AIzaSyD8AUTdqP7v_JyY7MIZIYF4erTArugTYf8"; 
+// // import { motion, AnimatePresence } from 'framer-motion';
+// // import { useState, useRef, useCallback, useEffect } from 'react';
+// // import { Link } from 'react-router-dom';
+// // import { ArrowLeft, Camera, CheckCircle, Loader2, MapPin, RefreshCw, AlertTriangle, Video, XCircle } from 'lucide-react';
+// // import { Button } from '@/components/ui/button';
+// // import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+// // import { Badge } from '@/components/ui/badge';
+// // import { toast } from 'sonner';
+// // import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
-// const mapContainerStyle = {
-//   width: '100%',
-//   height: '200px',
-//   borderRadius: '0.5rem'
-// };
+// // // --- Types ---
+// // interface DetectionResult {
+// //   plasticCount: number;
+// //   items: string[];
+// //   confidence: number;
+// //   isPolluted: boolean;
+// //   hazardLevel: 'Low' | 'Medium' | 'High';
+// //   boundingBoxes: { x: number; y: number; width: number; height: number; label: string }[];
+// // }
 
-// export default function Report() {
-//   // State
-//   const [isCameraOpen, setIsCameraOpen] = useState(false);
-//   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-//   const [location, setLocation] = useState<LocationData | null>(null);
+// // interface LocationData {
+// //   lat: number;
+// //   lng: number;
+// //   accuracy: number;
+// // }
+
+// // // --- Constants ---
+// // // Replace with your actual Google Maps API Key
+// // const GOOGLE_MAPS_API_KEY = "AIzaSyD8AUTdqP7v_JyY7MIZIYF4erTArugTYf8"; 
+
+// // const mapContainerStyle = {
+// //   width: '100%',
+// //   height: '200px',
+// //   borderRadius: '0.5rem'
+// // };
+
+// // export default function Report() {
+// //   // State
+// //   const [isCameraOpen, setIsCameraOpen] = useState(false);
+// //   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+// //   const [location, setLocation] = useState<LocationData | null>(null);
   
-//   const [isAnalyzing, setIsAnalyzing] = useState(false);
-//   const [detectionResult, setDetectionResult] = useState<DetectionResult | null>(null);
-//   const [isSubmitted, setIsSubmitted] = useState(false);
+// //   const [isAnalyzing, setIsAnalyzing] = useState(false);
+// //   const [detectionResult, setDetectionResult] = useState<DetectionResult | null>(null);
+// //   const [isSubmitted, setIsSubmitted] = useState(false);
 
-//   // Refs
-//   const videoRef = useRef<HTMLVideoElement>(null);
-//   const canvasRef = useRef<HTMLCanvasElement>(null);
+// //   // Refs
+// //   const videoRef = useRef<HTMLVideoElement>(null);
+// //   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-//   // 1. Start Camera
-//   const startCamera = async () => {
-//     try {
-//       setIsCameraOpen(true);
-//       const stream = await navigator.mediaDevices.getUserMedia({ 
-//         video: { facingMode: 'environment' } // Prefer back camera
-//       });
-//       if (videoRef.current) {
-//         videoRef.current.srcObject = stream;
-//       }
-//     } catch (err) {
-//       toast.error("Camera access denied. Please enable camera permissions.");
-//       setIsCameraOpen(false);
-//     }
-//   };
+// //   // 1. Start Camera
+// //   const startCamera = async () => {
+// //     try {
+// //       setIsCameraOpen(true);
+// //       const stream = await navigator.mediaDevices.getUserMedia({ 
+// //         video: { facingMode: 'environment' } // Prefer back camera
+// //       });
+// //       if (videoRef.current) {
+// //         videoRef.current.srcObject = stream;
+// //       }
+// //     } catch (err) {
+// //       toast.error("Camera access denied. Please enable camera permissions.");
+// //       setIsCameraOpen(false);
+// //     }
+// //   };
 
-//   // 2. Stop Camera
-//   const stopCamera = () => {
-//     if (videoRef.current && videoRef.current.srcObject) {
-//       const stream = videoRef.current.srcObject as MediaStream;
-//       stream.getTracks().forEach(track => track.stop());
-//       videoRef.current.srcObject = null;
-//     }
-//     setIsCameraOpen(false);
-//   };
+// //   // 2. Stop Camera
+// //   const stopCamera = () => {
+// //     if (videoRef.current && videoRef.current.srcObject) {
+// //       const stream = videoRef.current.srcObject as MediaStream;
+// //       stream.getTracks().forEach(track => track.stop());
+// //       videoRef.current.srcObject = null;
+// //     }
+// //     setIsCameraOpen(false);
+// //   };
 
-//   // 3. Capture Image & Location Simultaneously
-//   const captureImageAndLocation = () => {
-//     if (!videoRef.current || !canvasRef.current) return;
+// //   // 3. Capture Image & Location Simultaneously
+// //   const captureImageAndLocation = () => {
+// //     if (!videoRef.current || !canvasRef.current) return;
 
-//     // A. Get Location First (Blocking)
-//     if (!navigator.geolocation) {
-//       toast.error("Geolocation is not supported by your browser");
-//       return;
-//     }
+// //     // A. Get Location First (Blocking)
+// //     if (!navigator.geolocation) {
+// //       toast.error("Geolocation is not supported by your browser");
+// //       return;
+// //     }
 
-//     toast.loading("Acquiring precise location...");
+// //     toast.loading("Acquiring precise location...");
 
-//     navigator.geolocation.getCurrentPosition(
-//       (position) => {
-//         // 1. Save Location
-//         setLocation({
-//           lat: position.coords.latitude,
-//           lng: position.coords.longitude,
-//           accuracy: position.coords.accuracy
-//         });
+// //     navigator.geolocation.getCurrentPosition(
+// //       (position) => {
+// //         // 1. Save Location
+// //         setLocation({
+// //           lat: position.coords.latitude,
+// //           lng: position.coords.longitude,
+// //           accuracy: position.coords.accuracy
+// //         });
 
-//         // 2. Draw Video Frame to Canvas
-//         const video = videoRef.current!;
-//         const canvas = canvasRef.current!;
-//         const context = canvas.getContext('2d');
+// //         // 2. Draw Video Frame to Canvas
+// //         const video = videoRef.current!;
+// //         const canvas = canvasRef.current!;
+// //         const context = canvas.getContext('2d');
         
-//         canvas.width = video.videoWidth;
-//         canvas.height = video.videoHeight;
+// //         canvas.width = video.videoWidth;
+// //         canvas.height = video.videoHeight;
         
-//         if (context) {
-//           context.drawImage(video, 0, 0, canvas.width, canvas.height);
-//           // Convert to Base64
-//           const imageData = canvas.toDataURL('image/jpeg');
-//           setSelectedImage(imageData);
+// //         if (context) {
+// //           context.drawImage(video, 0, 0, canvas.width, canvas.height);
+// //           // Convert to Base64
+// //           const imageData = canvas.toDataURL('image/jpeg');
+// //           setSelectedImage(imageData);
           
-//           // Cleanup
-//           stopCamera();
-//           toast.dismiss();
-//           toast.success(`Photo captured at ${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)}`);
-//         }
-//       },
-//       (error) => {
-//         toast.dismiss();
-//         toast.error("Location access denied. Cannot verify report location.");
-//         console.error(error);
-//       },
-//       { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-//     );
-//   };
+// //           // Cleanup
+// //           stopCamera();
+// //           toast.dismiss();
+// //           toast.success(`Photo captured at ${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)}`);
+// //         }
+// //       },
+// //       (error) => {
+// //         toast.dismiss();
+// //         toast.error("Location access denied. Cannot verify report location.");
+// //         console.error(error);
+// //       },
+// //       { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+// //     );
+// //   };
 
-//   // 4. Send to ML Model (Simulated)
-//   const analyzeImage = async () => {
-//     if (!selectedImage) return;
+// //   // 4. Send to ML Model (Simulated)
+// //   const analyzeImage = async () => {
+// //     if (!selectedImage) return;
 
-//     setIsAnalyzing(true);
+// //     setIsAnalyzing(true);
     
-//     // --- REAL API INTEGRATION PATTERN ---
-//     // const formData = new FormData();
-//     // formData.append('file', dataURItoBlob(selectedImage));
-//     // const response = await fetch('YOUR_FLASK_API_URL/detect', { method: 'POST', body: formData });
-//     // const result = await response.json();
+// //     // --- REAL API INTEGRATION PATTERN ---
+// //     // const formData = new FormData();
+// //     // formData.append('file', dataURItoBlob(selectedImage));
+// //     // const response = await fetch('YOUR_FLASK_API_URL/detect', { method: 'POST', body: formData });
+// //     // const result = await response.json();
     
-//     // --- SIMULATION (Replace this block with above fetch when backend is ready) ---
-//     await new Promise(resolve => setTimeout(resolve, 3000)); // Fake delay
+// //     // --- SIMULATION (Replace this block with above fetch when backend is ready) ---
+// //     await new Promise(resolve => setTimeout(resolve, 3000)); // Fake delay
     
-//     const isPolluted = Math.random() > 0.2; // 80% chance of pollution for demo
-//     const plasticCount = isPolluted ? Math.floor(Math.random() * 8) + 2 : 0;
+// //     const isPolluted = Math.random() > 0.2; // 80% chance of pollution for demo
+// //     const plasticCount = isPolluted ? Math.floor(Math.random() * 8) + 2 : 0;
     
-//     const mockResult: DetectionResult = {
-//       plasticCount,
-//       items: isPolluted ? ['Plastic Bag', 'Bottle', 'Wrapper'] : [],
-//       confidence: 0.89,
-//       isPolluted,
-//       hazardLevel: plasticCount > 5 ? 'High' : plasticCount > 2 ? 'Medium' : 'Low',
-//       boundingBoxes: [] // You would populate this from your YOLO/ML model output
-//     };
-//     // ---------------------------------------------------------------------------
+// //     const mockResult: DetectionResult = {
+// //       plasticCount,
+// //       items: isPolluted ? ['Plastic Bag', 'Bottle', 'Wrapper'] : [],
+// //       confidence: 0.89,
+// //       isPolluted,
+// //       hazardLevel: plasticCount > 5 ? 'High' : plasticCount > 2 ? 'Medium' : 'Low',
+// //       boundingBoxes: [] // You would populate this from your YOLO/ML model output
+// //     };
+// //     // ---------------------------------------------------------------------------
 
-//     setDetectionResult(mockResult);
-//     setIsAnalyzing(false);
+// //     setDetectionResult(mockResult);
+// //     setIsAnalyzing(false);
     
-//     if (mockResult.isPolluted) {
-//       toast.warning(`Detected ${mockResult.plasticCount} items.`);
-//     } else {
-//       toast.success('Area looks clean.');
-//     }
-//   };
+// //     if (mockResult.isPolluted) {
+// //       toast.warning(`Detected ${mockResult.plasticCount} items.`);
+// //     } else {
+// //       toast.success('Area looks clean.');
+// //     }
+// //   };
 
-//   const handleRetake = () => {
-//     setSelectedImage(null);
-//     setDetectionResult(null);
-//     setLocation(null);
-//     setIsSubmitted(false);
-//     startCamera();
-//   };
+// //   const handleRetake = () => {
+// //     setSelectedImage(null);
+// //     setDetectionResult(null);
+// //     setLocation(null);
+// //     setIsSubmitted(false);
+// //     startCamera();
+// //   };
 
-//   return (
-//     <div className="min-h-screen bg-background pb-20">
-//       {/* Header */}
-//       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
-//         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-//             <Link to="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground">
-//               <ArrowLeft className="w-5 h-5" />
-//               <span>Back</span>
-//             </Link>
-//             <h1 className="font-semibold">Live Report</h1>
-//             <div className="w-8" /> {/* Spacer */}
-//         </div>
-//       </header>
+// //   return (
+// //     <div className="min-h-screen bg-background pb-20">
+// //       {/* Header */}
+// //       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
+// //         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+// //             <Link to="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground">
+// //               <ArrowLeft className="w-5 h-5" />
+// //               <span>Back</span>
+// //             </Link>
+// //             <h1 className="font-semibold">Live Report</h1>
+// //             <div className="w-8" /> {/* Spacer */}
+// //         </div>
+// //       </header>
 
-//       <div className="container mx-auto px-4 py-6 max-w-lg">
+// //       <div className="container mx-auto px-4 py-6 max-w-lg">
         
-//         {/* STEP 1: CAMERA VIEW */}
-//         {!selectedImage && (
-//           <div className="space-y-4">
-//             <div className="relative aspect-[3/4] bg-black rounded-2xl overflow-hidden shadow-2xl">
-//               {!isCameraOpen ? (
-//                 <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-//                   <Camera className="w-16 h-16 mb-4 opacity-50" />
-//                   <Button onClick={startCamera} variant="secondary">
-//                     Open Camera
-//                   </Button>
-//                 </div>
-//               ) : (
-//                 <>
-//                   <video 
-//                     ref={videoRef} 
-//                     autoPlay 
-//                     playsInline 
-//                     className="w-full h-full object-cover"
-//                   />
-//                   {/* Overlay Guides */}
-//                   <div className="absolute inset-0 border-2 border-white/30 m-8 rounded-lg pointer-events-none" />
+// //         {/* STEP 1: CAMERA VIEW */}
+// //         {!selectedImage && (
+// //           <div className="space-y-4">
+// //             <div className="relative aspect-[3/4] bg-black rounded-2xl overflow-hidden shadow-2xl">
+// //               {!isCameraOpen ? (
+// //                 <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+// //                   <Camera className="w-16 h-16 mb-4 opacity-50" />
+// //                   <Button onClick={startCamera} variant="secondary">
+// //                     Open Camera
+// //                   </Button>
+// //                 </div>
+// //               ) : (
+// //                 <>
+// //                   <video 
+// //                     ref={videoRef} 
+// //                     autoPlay 
+// //                     playsInline 
+// //                     className="w-full h-full object-cover"
+// //                   />
+// //                   {/* Overlay Guides */}
+// //                   <div className="absolute inset-0 border-2 border-white/30 m-8 rounded-lg pointer-events-none" />
                   
-//                   {/* Capture Button */}
-//                   <div className="absolute bottom-8 inset-x-0 flex justify-center">
-//                     <button 
-//                       onClick={captureImageAndLocation}
-//                       className="w-20 h-20 bg-white rounded-full border-4 border-white/30 flex items-center justify-center hover:scale-105 active:scale-95 transition-transform shadow-lg"
-//                     >
-//                       <div className="w-16 h-16 bg-red-500 rounded-full" />
-//                     </button>
-//                   </div>
-//                 </>
-//               )}
-//             </div>
-//             <p className="text-center text-xs text-muted-foreground">
-//               We capture your GPS location automatically when you take the photo.
-//             </p>
-//           </div>
-//         )}
+// //                   {/* Capture Button */}
+// //                   <div className="absolute bottom-8 inset-x-0 flex justify-center">
+// //                     <button 
+// //                       onClick={captureImageAndLocation}
+// //                       className="w-20 h-20 bg-white rounded-full border-4 border-white/30 flex items-center justify-center hover:scale-105 active:scale-95 transition-transform shadow-lg"
+// //                     >
+// //                       <div className="w-16 h-16 bg-red-500 rounded-full" />
+// //                     </button>
+// //                   </div>
+// //                 </>
+// //               )}
+// //             </div>
+// //             <p className="text-center text-xs text-muted-foreground">
+// //               We capture your GPS location automatically when you take the photo.
+// //             </p>
+// //           </div>
+// //         )}
 
-//         {/* STEP 2: PREVIEW & MAP */}
-//         {selectedImage && (
-//           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+// //         {/* STEP 2: PREVIEW & MAP */}
+// //         {selectedImage && (
+// //           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
             
-//             {/* Image Preview Card */}
-//             <Card>
-//               <CardContent className="p-0 overflow-hidden relative">
-//                 <img src={selectedImage} alt="Captured" className="w-full h-64 object-cover" />
-//                 <Button 
-//                   size="icon" 
-//                   variant="destructive" 
-//                   className="absolute top-2 right-2 rounded-full shadow-md"
-//                   onClick={handleRetake}
-//                 >
-//                   <RefreshCw className="w-4 h-4" />
-//                 </Button>
-//               </CardContent>
+// //             {/* Image Preview Card */}
+// //             <Card>
+// //               <CardContent className="p-0 overflow-hidden relative">
+// //                 <img src={selectedImage} alt="Captured" className="w-full h-64 object-cover" />
+// //                 <Button 
+// //                   size="icon" 
+// //                   variant="destructive" 
+// //                   className="absolute top-2 right-2 rounded-full shadow-md"
+// //                   onClick={handleRetake}
+// //                 >
+// //                   <RefreshCw className="w-4 h-4" />
+// //                 </Button>
+// //               </CardContent>
               
-//               {/* Google Map Preview */}
-//               <div className="p-4 border-t border-border">
-//                 <div className="flex items-center gap-2 mb-3 text-sm font-medium text-muted-foreground">
-//                   <MapPin className="w-4 h-4 text-primary" />
-//                   Report Location
-//                 </div>
-//                 {location && (
-//                   <div className="rounded-lg overflow-hidden border border-border">
-//                     <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY}>
-//                       <GoogleMap
-//                         mapContainerStyle={mapContainerStyle}
-//                         center={location}
-//                         zoom={15}
-//                         options={{ disableDefaultUI: true, zoomControl: false }}
-//                       >
-//                         <Marker position={location} />
-//                       </GoogleMap>
-//                     </LoadScript>
-//                     <div className="bg-muted/50 p-2 text-xs text-center font-mono">
-//                       {location.lat.toFixed(6)}, {location.lng.toFixed(6)}
-//                     </div>
-//                   </div>
-//                 )}
-//               </div>
-//             </Card>
+// //               {/* Google Map Preview */}
+// //               <div className="p-4 border-t border-border">
+// //                 <div className="flex items-center gap-2 mb-3 text-sm font-medium text-muted-foreground">
+// //                   <MapPin className="w-4 h-4 text-primary" />
+// //                   Report Location
+// //                 </div>
+// //                 {location && (
+// //                   <div className="rounded-lg overflow-hidden border border-border">
+// //                     <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY}>
+// //                       <GoogleMap
+// //                         mapContainerStyle={mapContainerStyle}
+// //                         center={location}
+// //                         zoom={15}
+// //                         options={{ disableDefaultUI: true, zoomControl: false }}
+// //                       >
+// //                         <Marker position={location} />
+// //                       </GoogleMap>
+// //                     </LoadScript>
+// //                     <div className="bg-muted/50 p-2 text-xs text-center font-mono">
+// //                       {location.lat.toFixed(6)}, {location.lng.toFixed(6)}
+// //                     </div>
+// //                   </div>
+// //                 )}
+// //               </div>
+// //             </Card>
 
-//             {/* Analysis & Results */}
-//             {!detectionResult ? (
-//               <Button 
-//                 size="lg" 
-//                 className="w-full text-lg h-12 gap-2" 
-//                 onClick={analyzeImage}
-//                 disabled={isAnalyzing}
-//               >
-//                 {isAnalyzing ? <Loader2 className="animate-spin" /> : <AlertTriangle />}
-//                 Detect Pollution (ML)
-//               </Button>
-//             ) : (
-//               <Card className="border-primary/50 bg-primary/5">
-//                 <CardHeader>
-//                   <CardTitle className="flex items-center justify-between">
-//                     Results
-//                     <Badge variant={detectionResult.isPolluted ? "destructive" : "secondary"}>
-//                       {detectionResult.hazardLevel} Hazard
-//                     </Badge>
-//                   </CardTitle>
-//                 </CardHeader>
-//                 <CardContent className="space-y-4">
-//                   <div className="flex justify-between items-center bg-background/50 p-3 rounded-lg">
-//                     <span className="text-muted-foreground">Plastic Count</span>
-//                     <span className="text-xl font-bold">{detectionResult.plasticCount}</span>
-//                   </div>
+// //             {/* Analysis & Results */}
+// //             {!detectionResult ? (
+// //               <Button 
+// //                 size="lg" 
+// //                 className="w-full text-lg h-12 gap-2" 
+// //                 onClick={analyzeImage}
+// //                 disabled={isAnalyzing}
+// //               >
+// //                 {isAnalyzing ? <Loader2 className="animate-spin" /> : <AlertTriangle />}
+// //                 Detect Pollution (ML)
+// //               </Button>
+// //             ) : (
+// //               <Card className="border-primary/50 bg-primary/5">
+// //                 <CardHeader>
+// //                   <CardTitle className="flex items-center justify-between">
+// //                     Results
+// //                     <Badge variant={detectionResult.isPolluted ? "destructive" : "secondary"}>
+// //                       {detectionResult.hazardLevel} Hazard
+// //                     </Badge>
+// //                   </CardTitle>
+// //                 </CardHeader>
+// //                 <CardContent className="space-y-4">
+// //                   <div className="flex justify-between items-center bg-background/50 p-3 rounded-lg">
+// //                     <span className="text-muted-foreground">Plastic Count</span>
+// //                     <span className="text-xl font-bold">{detectionResult.plasticCount}</span>
+// //                   </div>
                   
-//                   <div className="flex flex-wrap gap-2">
-//                     {detectionResult.items.map((item, i) => (
-//                       <Badge key={i} variant="outline" className="bg-background">
-//                         {item}
-//                       </Badge>
-//                     ))}
-//                   </div>
+// //                   <div className="flex flex-wrap gap-2">
+// //                     {detectionResult.items.map((item, i) => (
+// //                       <Badge key={i} variant="outline" className="bg-background">
+// //                         {item}
+// //                       </Badge>
+// //                     ))}
+// //                   </div>
 
-//                   {!isSubmitted ? (
-//                     <Button className="w-full" onClick={() => setIsSubmitted(true)}>
-//                       Submit Verified Report
-//                     </Button>
-//                   ) : (
-//                     <div className="flex flex-col items-center py-4 text-green-600">
-//                       <CheckCircle className="w-12 h-12 mb-2" />
-//                       <span className="font-semibold">Report Sent to Authorities</span>
-//                     </div>
-//                   )}
-//                 </CardContent>
-//               </Card>
-//             )}
+// //                   {!isSubmitted ? (
+// //                     <Button className="w-full" onClick={() => setIsSubmitted(true)}>
+// //                       Submit Verified Report
+// //                     </Button>
+// //                   ) : (
+// //                     <div className="flex flex-col items-center py-4 text-green-600">
+// //                       <CheckCircle className="w-12 h-12 mb-2" />
+// //                       <span className="font-semibold">Report Sent to Authorities</span>
+// //                     </div>
+// //                   )}
+// //                 </CardContent>
+// //               </Card>
+// //             )}
 
-//           </motion.div>
-//         )}
+// //           </motion.div>
+// //         )}
 
-//         {/* Hidden Canvas for Capture */}
-//         <canvas ref={canvasRef} className="hidden" />
-//       </div>
-//     </div>
-//   );
-// }
+// //         {/* Hidden Canvas for Capture */}
+// //         <canvas ref={canvasRef} className="hidden" />
+// //       </div>
+// //     </div>
+// //   );
+// // }
 
 
 
-/////////////////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////////////////
 
-// import { motion } from 'framer-motion';
+// // import { motion } from 'framer-motion';
+// // import { useState, useRef } from 'react';
+// // import { Link } from 'react-router-dom';
+// // import { ArrowLeft, Camera, CheckCircle, Loader2, MapPin, RefreshCw, AlertTriangle, Building2 } from 'lucide-react';
+// // import { Button } from '@/components/ui/button';
+// // import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+// // import { Badge } from '@/components/ui/badge';
+// // import { toast } from 'sonner';
+// // import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+// // import 'leaflet/dist/leaflet.css';
+// // import L from 'leaflet';
+
+// // // --- LEAFLET ICON FIX ---
+// // import icon from 'leaflet/dist/images/marker-icon.png';
+// // import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
+// // const DefaultIcon = L.icon({
+// //     iconUrl: icon,
+// //     shadowUrl: iconShadow,
+// //     iconSize: [25, 41],
+// //     iconAnchor: [12, 41]
+// // });
+// // L.Marker.prototype.options.icon = DefaultIcon;
+
+// // // Helper to center map
+// // function ChangeView({ center }: { center: [number, number] }) {
+// //   const map = useMap();
+// //   map.setView(center);
+// //   return null;
+// // }
+
+// // interface LocationData {
+// //   lat: number;
+// //   lng: number;
+// //   method: 'GPS' | 'IP' | 'STATIC';
+// // }
+
+// // interface DetectionResult {
+// //   plasticCount: number;
+// //   items: string[];
+// //   confidence: number;
+// //   isPolluted: boolean;
+// //   hazardLevel: 'Low' | 'Medium' | 'High';
+// // }
+
+// // export default function Report() {
+// //   const [isCameraOpen, setIsCameraOpen] = useState(false);
+// //   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+// //   const [location, setLocation] = useState<LocationData | null>(null);
+// //   const [isAnalyzing, setIsAnalyzing] = useState(false);
+// //   const [detectionResult, setDetectionResult] = useState<DetectionResult | null>(null);
+// //   const [isSubmitted, setIsSubmitted] = useState(false);
+
+// //   const videoRef = useRef<HTMLVideoElement>(null);
+// //   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+// //   // 1. Start Camera
+// //   const startCamera = async () => {
+// //     try {
+// //       setIsCameraOpen(true);
+// //       const stream = await navigator.mediaDevices.getUserMedia({ 
+// //         video: { facingMode: 'environment' } // Uses back camera on phone
+// //       });
+// //       if (videoRef.current) videoRef.current.srcObject = stream;
+// //     } catch (err) {
+// //       toast.error("Camera access denied");
+// //     }
+// //   };
+
+// //   const stopCamera = () => {
+// //     if (videoRef.current?.srcObject) {
+// //       const stream = videoRef.current.srcObject as MediaStream;
+// //       stream.getTracks().forEach(track => track.stop());
+// //       videoRef.current.srcObject = null;
+// //     }
+// //     setIsCameraOpen(false);
+// //   };
+
+// //   const captureFrame = () => {
+// //     if (!videoRef.current || !canvasRef.current) return;
+// //     const video = videoRef.current;
+// //     const canvas = canvasRef.current;
+// //     const context = canvas.getContext('2d');
+// //     canvas.width = video.videoWidth;
+// //     canvas.height = video.videoHeight;
+// //     if (context) {
+// //       context.drawImage(video, 0, 0, canvas.width, canvas.height);
+// //       setSelectedImage(canvas.toDataURL('image/jpeg'));
+// //       stopCamera();
+// //     }
+// //   };
+
+// //   // --- STATIC LOCATION LOGIC ---
+// //   const useThaparLocation = () => {
+// //     // Coordinates for Thapar Institute (TIET), Patiala
+// //     const thaparCoords = {
+// //       lat: 30.3564, 
+// //       lng: 76.3647
+// //     };
+
+// //     setLocation({ 
+// //       ...thaparCoords, 
+// //       method: 'STATIC' 
+// //     });
+    
+// //     captureFrame();
+// //     toast.success("Location set to Thapar Campus");
+// //   };
+
+// //   const analyzeImage = async () => {
+// //     if (!selectedImage) return;
+// //     setIsAnalyzing(true);
+// //     // Simulate ML Delay
+// //     await new Promise(resolve => setTimeout(resolve, 2000));
+    
+// //     setDetectionResult({
+// //       plasticCount: 4,
+// //       items: ['Wrapper', 'Plastic Bottle'],
+// //       confidence: 0.94,
+// //       isPolluted: true,
+// //       hazardLevel: 'Medium',
+// //     });
+// //     setIsAnalyzing(false);
+// //   };
+
+// //   const handleRetake = () => {
+// //     setSelectedImage(null);
+// //     setDetectionResult(null);
+// //     setLocation(null);
+// //     setIsSubmitted(false);
+// //     startCamera();
+// //   };
+
+// //   return (
+// //     <div className="min-h-screen bg-background pb-20">
+// //       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
+// //         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+// //             <Link to="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground">
+// //               <ArrowLeft className="w-5 h-5" />
+// //               <span>Back</span>
+// //             </Link>
+// //             <h1 className="font-semibold">Report Issue</h1>
+// //             <div className="w-8" />
+// //         </div>
+// //       </header>
+
+// //       <div className="container mx-auto px-4 py-6 max-w-lg">
+        
+// //         {/* CAMERA VIEW */}
+// //         {!selectedImage && (
+// //           <div className="space-y-4">
+// //             <div className="relative aspect-[3/4] bg-black rounded-2xl overflow-hidden shadow-2xl">
+// //                {!isCameraOpen ? (
+// //                   <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+// //                     <Camera className="w-16 h-16 mb-4 opacity-50" />
+// //                     <Button onClick={startCamera} variant="secondary">Open Camera</Button>
+// //                   </div>
+// //                 ) : (
+// //                   <>
+// //                     <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover" />
+                    
+// //                     {/* Controls Overlay */}
+// //                     <div className="absolute bottom-8 inset-x-0 flex flex-col items-center gap-4">
+                      
+// //                       {/* Capture Button (Triggers Thapar Location) */}
+// //                       <button 
+// //                         onClick={useThaparLocation}
+// //                         className="w-20 h-20 bg-white rounded-full border-4 border-white/30 flex items-center justify-center hover:scale-105 transition-transform shadow-lg group"
+// //                       >
+// //                         <div className="w-16 h-16 bg-red-500 rounded-full group-active:scale-90 transition-transform" />
+// //                       </button>
+
+// //                       <div className="bg-black/50 backdrop-blur-md px-3 py-1 rounded-full text-xs text-white/80 flex items-center gap-2">
+// //                         <MapPin className="w-3 h-3" />
+// //                         <span>Capturing at Thapar Campus</span>
+// //                       </div>
+// //                     </div>
+// //                   </>
+// //                 )}
+// //             </div>
+// //           </div>
+// //         )}
+
+// //         {/* RESULTS VIEW */}
+// //         {selectedImage && (
+// //           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+// //             <Card>
+// //               <CardContent className="p-0 overflow-hidden relative">
+// //                 <img src={selectedImage} alt="Captured" className="w-full h-64 object-cover" />
+// //                 <Button size="icon" variant="destructive" className="absolute top-2 right-2 rounded-full" onClick={handleRetake}>
+// //                   <RefreshCw className="w-4 h-4" />
+// //                 </Button>
+// //               </CardContent>
+              
+// //               <div className="p-4 border-t border-border">
+// //                 <div className="flex items-center justify-between mb-3">
+// //                     <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+// //                         <MapPin className="w-4 h-4 text-primary" />
+// //                         Report Location
+// //                     </div>
+// //                     <Badge variant="outline" className="gap-1">
+// //                         <Building2 className="w-3 h-3" /> TIET Patiala
+// //                     </Badge>
+// //                 </div>
+                
+// //                 {location && (
+// //                   <div className="h-[200px] w-full rounded-lg overflow-hidden border border-border relative z-0">
+// //                     <MapContainer 
+// //                       center={[location.lat, location.lng]} 
+// //                       zoom={16} // Zoomed in closer for campus view
+// //                       style={{ height: "100%", width: "100%" }}
+// //                       dragging={false}
+// //                       zoomControl={false}
+// //                     >
+// //                       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+// //                       <Marker position={[location.lat, location.lng]}>
+// //                         <Popup>Thapar Institute (TIET)</Popup>
+// //                       </Marker>
+// //                       <ChangeView center={[location.lat, location.lng]} />
+// //                     </MapContainer>
+// //                   </div>
+// //                 )}
+                
+// //                 {location && (
+// //                   <div className="mt-2 text-xs text-center font-mono text-muted-foreground">
+// //                     {location.lat.toFixed(4)}, {location.lng.toFixed(4)}
+// //                   </div>
+// //                 )}
+// //               </div>
+// //             </Card>
+
+// //             {!detectionResult ? (
+// //               <Button size="lg" className="w-full h-12 gap-2" onClick={analyzeImage} disabled={isAnalyzing}>
+// //                 {isAnalyzing ? <Loader2 className="animate-spin" /> : <AlertTriangle />}
+// //                  Scan for Pollution
+// //               </Button>
+// //             ) : (
+// //                <Card className="border-primary/50 bg-primary/5">
+// //                  <CardHeader><CardTitle>Results</CardTitle></CardHeader>
+// //                  <CardContent>
+// //                     <div className="flex justify-between items-center bg-background/50 p-3 rounded-lg mb-4">
+// //                         <span className="text-muted-foreground">Plastic Items</span>
+// //                         <span className="text-xl font-bold">{detectionResult.plasticCount}</span>
+// //                     </div>
+// //                     {!isSubmitted ? (
+// //                         <Button className="w-full" onClick={() => setIsSubmitted(true)}>Submit Report</Button>
+// //                     ) : (
+// //                         <div className="text-green-600 font-bold text-center flex items-center justify-center gap-2">
+// //                             <CheckCircle /> Sent to Admin
+// //                         </div>
+// //                     )}
+// //                  </CardContent>
+// //                </Card>
+// //             )}
+// //           </motion.div>
+// //         )}
+
+// //         <canvas ref={canvasRef} className="hidden" />
+// //       </div>
+// //     </div>
+// //   );
+// // }
+
+
+
+// /////////////////////////////////////////////////////////////////////////////////////////
+
+// import { motion, AnimatePresence } from 'framer-motion';
 // import { useState, useRef } from 'react';
 // import { Link } from 'react-router-dom';
-// import { ArrowLeft, Camera, CheckCircle, Loader2, MapPin, RefreshCw, AlertTriangle, Building2 } from 'lucide-react';
+// import { ArrowLeft, Camera, CheckCircle, Loader2, MapPin, RefreshCw, AlertTriangle, Building2, Send } from 'lucide-react';
 // import { Button } from '@/components/ui/button';
 // import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 // import { Badge } from '@/components/ui/badge';
@@ -817,7 +1084,6 @@
 // });
 // L.Marker.prototype.options.icon = DefaultIcon;
 
-// // Helper to center map
 // function ChangeView({ center }: { center: [number, number] }) {
 //   const map = useMap();
 //   map.setView(center);
@@ -849,12 +1115,11 @@
 //   const videoRef = useRef<HTMLVideoElement>(null);
 //   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-//   // 1. Start Camera
 //   const startCamera = async () => {
 //     try {
 //       setIsCameraOpen(true);
 //       const stream = await navigator.mediaDevices.getUserMedia({ 
-//         video: { facingMode: 'environment' } // Uses back camera on phone
+//         video: { facingMode: 'environment' } 
 //       });
 //       if (videoRef.current) videoRef.current.srcObject = stream;
 //     } catch (err) {
@@ -885,37 +1150,51 @@
 //     }
 //   };
 
-//   // --- STATIC LOCATION LOGIC ---
 //   const useThaparLocation = () => {
-//     // Coordinates for Thapar Institute (TIET), Patiala
-//     const thaparCoords = {
-//       lat: 30.3564, 
-//       lng: 76.3647
-//     };
-
-//     setLocation({ 
-//       ...thaparCoords, 
-//       method: 'STATIC' 
-//     });
-    
+//     const thaparCoords = { lat: 30.3564, lng: 76.3647 };
+//     setLocation({ ...thaparCoords, method: 'STATIC' });
 //     captureFrame();
-//     toast.success("Location set to Thapar Campus");
+//     toast.success("Location fixed to Thapar Campus");
 //   };
 
 //   const analyzeImage = async () => {
 //     if (!selectedImage) return;
 //     setIsAnalyzing(true);
-//     // Simulate ML Delay
 //     await new Promise(resolve => setTimeout(resolve, 2000));
     
 //     setDetectionResult({
-//       plasticCount: 4,
-//       items: ['Wrapper', 'Plastic Bottle'],
+//       plasticCount: Math.floor(Math.random() * 10) + 1,
+//       items: ['Plastic Bottle', 'Wrapper', 'Nets'],
 //       confidence: 0.94,
 //       isPolluted: true,
 //       hazardLevel: 'Medium',
 //     });
 //     setIsAnalyzing(false);
+//     toast.info("AI Analysis Complete");
+//   };
+
+//   // --- SUBMISSION LOGIC TO CONNECT TO ADMIN ---
+//   const handleSubmitReport = () => {
+//     if (!detectionResult || !location) return;
+
+//     // Create the report object matching Admin's expectations
+//     const newReport = {
+//       id: `USR-${Math.floor(1000 + Math.random() * 9000)}`,
+//       location: { lat: location.lat, lng: location.lng },
+//       plasticCount: detectionResult.plasticCount,
+//       items: detectionResult.items,
+//       timestamp: new Date().toISOString(),
+//       actionTaken: 'Pending', // Initial status for Admin to manage
+//     };
+
+//     // Store in localStorage for the Admin panel to pick up
+//     const existingReports = JSON.parse(localStorage.getItem('user-reports') || '[]');
+//     localStorage.setItem('user-reports', JSON.stringify([newReport, ...existingReports]));
+
+//     setIsSubmitted(true);
+//     toast.success("Report sent to Authorities", {
+//       description: "Drone units have been notified."
+//     });
 //   };
 
 //   const handleRetake = () => {
@@ -934,7 +1213,7 @@
 //               <ArrowLeft className="w-5 h-5" />
 //               <span>Back</span>
 //             </Link>
-//             <h1 className="font-semibold">Report Issue</h1>
+//             <h1 className="font-semibold">AquaPulse Reporter</h1>
 //             <div className="w-8" />
 //         </div>
 //       </header>
@@ -944,30 +1223,27 @@
 //         {/* CAMERA VIEW */}
 //         {!selectedImage && (
 //           <div className="space-y-4">
-//             <div className="relative aspect-[3/4] bg-black rounded-2xl overflow-hidden shadow-2xl">
+//             <div className="relative aspect-[3/4] bg-black rounded-2xl overflow-hidden shadow-2xl border border-white/10">
 //                {!isCameraOpen ? (
 //                   <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-//                     <Camera className="w-16 h-16 mb-4 opacity-50" />
-//                     <Button onClick={startCamera} variant="secondary">Open Camera</Button>
+//                     <Camera className="w-16 h-16 mb-4 opacity-20" />
+//                     <Button onClick={startCamera} variant="secondary" className="gap-2">
+//                       <Camera className="w-4 h-4" /> Start Camera
+//                     </Button>
 //                   </div>
 //                 ) : (
 //                   <>
 //                     <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover" />
-                    
-//                     {/* Controls Overlay */}
 //                     <div className="absolute bottom-8 inset-x-0 flex flex-col items-center gap-4">
-                      
-//                       {/* Capture Button (Triggers Thapar Location) */}
 //                       <button 
 //                         onClick={useThaparLocation}
 //                         className="w-20 h-20 bg-white rounded-full border-4 border-white/30 flex items-center justify-center hover:scale-105 transition-transform shadow-lg group"
 //                       >
 //                         <div className="w-16 h-16 bg-red-500 rounded-full group-active:scale-90 transition-transform" />
 //                       </button>
-
 //                       <div className="bg-black/50 backdrop-blur-md px-3 py-1 rounded-full text-xs text-white/80 flex items-center gap-2">
 //                         <MapPin className="w-3 h-3" />
-//                         <span>Capturing at Thapar Campus</span>
+//                         <span>Auto-tagging: TIET Patiala</span>
 //                       </div>
 //                     </div>
 //                   </>
@@ -978,74 +1254,87 @@
 
 //         {/* RESULTS VIEW */}
 //         {selectedImage && (
-//           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-//             <Card>
-//               <CardContent className="p-0 overflow-hidden relative">
-//                 <img src={selectedImage} alt="Captured" className="w-full h-64 object-cover" />
-//                 <Button size="icon" variant="destructive" className="absolute top-2 right-2 rounded-full" onClick={handleRetake}>
-//                   <RefreshCw className="w-4 h-4" />
-//                 </Button>
-//               </CardContent>
+//           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+//             <Card className="overflow-hidden glass-card">
+//               <div className="relative h-64">
+//                 <img src={selectedImage} alt="Captured" className="w-full h-full object-cover" />
+//                 {!isSubmitted && (
+//                   <Button size="icon" variant="destructive" className="absolute top-2 right-2 rounded-full" onClick={handleRetake}>
+//                     <RefreshCw className="w-4 h-4" />
+//                   </Button>
+//                 )}
+//               </div>
               
-//               <div className="p-4 border-t border-border">
+//               <div className="p-4">
 //                 <div className="flex items-center justify-between mb-3">
 //                     <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
 //                         <MapPin className="w-4 h-4 text-primary" />
-//                         Report Location
+//                         Incident Location
 //                     </div>
-//                     <Badge variant="outline" className="gap-1">
+//                     <Badge variant="outline" className="gap-1 bg-primary/5">
 //                         <Building2 className="w-3 h-3" /> TIET Patiala
 //                     </Badge>
 //                 </div>
                 
 //                 {location && (
-//                   <div className="h-[200px] w-full rounded-lg overflow-hidden border border-border relative z-0">
+//                   <div className="h-[180px] w-full rounded-lg overflow-hidden border border-border relative z-0">
 //                     <MapContainer 
 //                       center={[location.lat, location.lng]} 
-//                       zoom={16} // Zoomed in closer for campus view
+//                       zoom={16} 
 //                       style={{ height: "100%", width: "100%" }}
 //                       dragging={false}
 //                       zoomControl={false}
 //                     >
 //                       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 //                       <Marker position={[location.lat, location.lng]}>
-//                         <Popup>Thapar Institute (TIET)</Popup>
+//                         <Popup>Thapar Campus</Popup>
 //                       </Marker>
 //                       <ChangeView center={[location.lat, location.lng]} />
 //                     </MapContainer>
-//                   </div>
-//                 )}
-                
-//                 {location && (
-//                   <div className="mt-2 text-xs text-center font-mono text-muted-foreground">
-//                     {location.lat.toFixed(4)}, {location.lng.toFixed(4)}
 //                   </div>
 //                 )}
 //               </div>
 //             </Card>
 
 //             {!detectionResult ? (
-//               <Button size="lg" className="w-full h-12 gap-2" onClick={analyzeImage} disabled={isAnalyzing}>
-//                 {isAnalyzing ? <Loader2 className="animate-spin" /> : <AlertTriangle />}
-//                  Scan for Pollution
+//               <Button size="lg" className="w-full h-14 gap-2 text-lg shadow-lg" onClick={analyzeImage} disabled={isAnalyzing}>
+//                 {isAnalyzing ? (
+//                   <>
+//                     <Loader2 className="animate-spin w-5 h-5" />
+//                     AI is Analyzing...
+//                   </>
+//                 ) : (
+//                   <>
+//                     <AlertTriangle className="w-5 h-5" />
+//                     Scan for Pollutants
+//                   </>
+//                 )}
 //               </Button>
 //             ) : (
-//                <Card className="border-primary/50 bg-primary/5">
-//                  <CardHeader><CardTitle>Results</CardTitle></CardHeader>
-//                  <CardContent>
-//                     <div className="flex justify-between items-center bg-background/50 p-3 rounded-lg mb-4">
-//                         <span className="text-muted-foreground">Plastic Items</span>
-//                         <span className="text-xl font-bold">{detectionResult.plasticCount}</span>
-//                     </div>
-//                     {!isSubmitted ? (
-//                         <Button className="w-full" onClick={() => setIsSubmitted(true)}>Submit Report</Button>
-//                     ) : (
-//                         <div className="text-green-600 font-bold text-center flex items-center justify-center gap-2">
-//                             <CheckCircle /> Sent to Admin
-//                         </div>
-//                     )}
-//                  </CardContent>
-//                </Card>
+//                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
+//                  <Card className="border-primary/50 bg-primary/5">
+//                    <CardHeader className="pb-2">
+//                      <CardTitle className="text-sm uppercase tracking-wider text-muted-foreground">Detection Results</CardTitle>
+//                    </CardHeader>
+//                    <CardContent>
+//                       <div className="flex justify-between items-center bg-background/50 p-4 rounded-xl mb-4 border border-border">
+//                           <span className="font-medium">Identified Plastic Items</span>
+//                           <span className="text-2xl font-bold text-primary">{detectionResult.plasticCount}</span>
+//                       </div>
+//                       {!isSubmitted ? (
+//                           <Button className="w-full h-12 gap-2" size="lg" onClick={handleSubmitReport}>
+//                             <Send className="w-4 h-4" /> Submit to Authority Panel
+//                           </Button>
+//                       ) : (
+//                           <div className="bg-green-500/10 border border-green-500/20 p-4 rounded-xl text-green-600 font-bold text-center flex flex-col items-center gap-2">
+//                               <CheckCircle className="w-8 h-8" />
+//                               <div className="text-sm">Report Successfully Transmitted</div>
+//                               <Link to="/" className="text-xs underline mt-2 text-green-700">Return to Dashboard</Link>
+//                           </div>
+//                       )}
+//                    </CardContent>
+//                  </Card>
+//                </motion.div>
 //             )}
 //           </motion.div>
 //         )}
@@ -1056,9 +1345,10 @@
 //   );
 // }
 
+// //////////////////////////////////////////
+/////////////////////////////////////////
+//////////////////////////////////////////
 
-
-/////////////////////////////////////////////////////////////////////////////////////////
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useRef } from 'react';
@@ -1077,12 +1367,23 @@ import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 const DefaultIcon = L.icon({
-    iconUrl: icon,
-    shadowUrl: iconShadow,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41]
+  iconUrl: icon,
+  shadowUrl: iconShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41]
 });
 L.Marker.prototype.options.icon = DefaultIcon;
+
+// --- UTILS ---
+const dataURLtoBlob = (dataurl: string) => {
+  const arr = dataurl.split(',');
+  const mime = arr[0].match(/:(.*?);/)![1];
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  while (n--) u8arr[n] = bstr.charCodeAt(n);
+  return new Blob([u8arr], { type: mime });
+};
 
 function ChangeView({ center }: { center: [number, number] }) {
   const map = useMap();
@@ -1097,11 +1398,34 @@ interface LocationData {
 }
 
 interface DetectionResult {
-  plasticCount: number;
+  pollutionScore: number;
+  pollutionLevel: 'Clean / Safe' | 'Slightly Polluted' | 'Moderately Polluted' | 'Highly Polluted' | 'Severely Polluted';
   items: string[];
   confidence: number;
   isPolluted: boolean;
-  hazardLevel: 'Low' | 'Medium' | 'High';
+  adminAction: string;
+  levelColor: string;
+  levelIcon: string;
+  algaeFound: boolean;
+}
+
+function getPollutionLevel(score: number): {
+  level: DetectionResult['pollutionLevel'];
+  action: string;
+  color: string;
+  icon: string;
+} {
+  if (score <= 20) {
+    return { level: 'Clean / Safe', action: 'No action required', color: 'bg-green-500/10 border-green-500/20 text-green-600', icon: '🟢' };
+  } else if (score <= 40) {
+    return { level: 'Slightly Polluted', action: 'Monitor regularly', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-600', icon: '🟡' };
+  } else if (score <= 60) {
+    return { level: 'Moderately Polluted', action: 'Send warning to admin', color: 'bg-orange-500/10 border-orange-500/20 text-orange-600', icon: '🟠' };
+  } else if (score <= 80) {
+    return { level: 'Highly Polluted', action: 'Immediate attention', color: 'bg-red-500/10 border-red-500/20 text-red-600', icon: '🔴' };
+  } else {
+    return { level: 'Severely Polluted', action: 'Emergency alert', color: 'bg-purple-500/10 border-purple-500/20 text-purple-600', icon: '☢️' };
+  }
 }
 
 export default function Report() {
@@ -1111,6 +1435,8 @@ export default function Report() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [detectionResult, setDetectionResult] = useState<DetectionResult | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [pointsEarned, setPointsEarned] = useState(0);
+  const [showRewardPopup, setShowRewardPopup] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -1154,47 +1480,90 @@ export default function Report() {
     const thaparCoords = { lat: 30.3564, lng: 76.3647 };
     setLocation({ ...thaparCoords, method: 'STATIC' });
     captureFrame();
-    toast.success("Location fixed to Thapar Campus");
+    toast.success("Location fixed to TIET Campus");
   };
 
   const analyzeImage = async () => {
     if (!selectedImage) return;
     setIsAnalyzing(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    setDetectionResult({
-      plasticCount: Math.floor(Math.random() * 10) + 1,
-      items: ['Plastic Bottle', 'Wrapper', 'Nets'],
-      confidence: 0.94,
-      isPolluted: true,
-      hazardLevel: 'Medium',
-    });
-    setIsAnalyzing(false);
-    toast.info("AI Analysis Complete");
+
+    try {
+      const imageBlob = dataURLtoBlob(selectedImage);
+      const formData = new FormData();
+      formData.append('image', imageBlob, 'capture.jpg');
+
+      // Connecting to your Flask Backend
+      const response = await fetch('http://localhost:5000/analyze', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error("ML Server not responding");
+
+      const data = await response.json();
+
+      // Extracting stats from the model response
+      const plasticCount = data.plastic_stats.count;
+      const detectedItems = data.plastic_stats.items.map((i: any) => i.class);
+      const algaeStatus = data.water_quality.algae;
+
+      // Scoring logic: Items detected + Algae presence
+      let score = Math.min(plasticCount * 25, 90);
+      if (algaeStatus) score += 10;
+      
+      const levelData = getPollutionLevel(score);
+
+      setDetectionResult({
+        pollutionScore: score,
+        pollutionLevel: levelData.level,
+        items: detectedItems.length > 0 ? [...new Set(detectedItems)] as string[] : ['Organic Debris'],
+        confidence: data.plastic_stats.items[0]?.confidence || 0.85,
+        isPolluted: score > 20,
+        adminAction: levelData.action,
+        levelColor: levelData.color,
+        levelIcon: levelData.icon,
+        algaeFound: algaeStatus
+      });
+
+      toast.success("AI Analysis Complete");
+    } catch (error) {
+      console.error(error);
+      toast.error("Analysis Failed", { description: "Ensure Flask server is running on port 5000" });
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
-  // --- SUBMISSION LOGIC TO CONNECT TO ADMIN ---
   const handleSubmitReport = () => {
     if (!detectionResult || !location) return;
 
-    // Create the report object matching Admin's expectations
+    let points = 10;
+    if (detectionResult.pollutionScore > 80) points = 50;
+    else if (detectionResult.pollutionScore > 60) points = 40;
+    else if (detectionResult.pollutionScore > 40) points = 30;
+    else if (detectionResult.pollutionScore > 20) points = 20;
+
+    setPointsEarned(points);
+    setShowRewardPopup(true);
+
+    setTimeout(() => setShowRewardPopup(false), 4500);
+
     const newReport = {
       id: `USR-${Math.floor(1000 + Math.random() * 9000)}`,
       location: { lat: location.lat, lng: location.lng },
-      plasticCount: detectionResult.plasticCount,
+      pollutionScore: detectionResult.pollutionScore,
+      pollutionLevel: detectionResult.pollutionLevel,
       items: detectionResult.items,
       timestamp: new Date().toISOString(),
-      actionTaken: 'Pending', // Initial status for Admin to manage
+      actionTaken: 'Pending',
+      adminAction: detectionResult.adminAction
     };
 
-    // Store in localStorage for the Admin panel to pick up
     const existingReports = JSON.parse(localStorage.getItem('user-reports') || '[]');
     localStorage.setItem('user-reports', JSON.stringify([newReport, ...existingReports]));
 
     setIsSubmitted(true);
-    toast.success("Report sent to Authorities", {
-      description: "Drone units have been notified."
-    });
+    toast.success("Report sent to Authorities");
   };
 
   const handleRetake = () => {
@@ -1202,6 +1571,7 @@ export default function Report() {
     setDetectionResult(null);
     setLocation(null);
     setIsSubmitted(false);
+    setPointsEarned(0);
     startCamera();
   };
 
@@ -1213,38 +1583,50 @@ export default function Report() {
               <ArrowLeft className="w-5 h-5" />
               <span>Back</span>
             </Link>
-            <h1 className="font-semibold">AquaPulse Reporter</h1>
+            <h1 className="font-semibold text-primary">AquaPulse Reporter</h1>
             <div className="w-8" />
         </div>
       </header>
 
       <div className="container mx-auto px-4 py-6 max-w-lg">
         
-        {/* CAMERA VIEW */}
+        {/* Reward Popup */}
+        <AnimatePresence>
+          {showRewardPopup && (
+            <motion.div initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+              <div className="bg-background rounded-2xl p-8 text-center shadow-2xl border border-amber-500/20 relative">
+                <div className="text-5xl mb-4">🎉 +{pointsEarned} ⭐</div>
+                <h2 className="text-xl font-bold mb-2">Points Earned!</h2>
+                <p className="text-muted-foreground text-sm">Thank you for reporting water pollution.</p>
+                <motion.div initial={{ scaleX: 1 }} animate={{ scaleX: 0 }} transition={{ duration: 4.5 }} className="absolute bottom-0 left-0 right-0 h-1 bg-amber-500 origin-left rounded-b-2xl" />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Camera View */}
         {!selectedImage && (
           <div className="space-y-4">
-            <div className="relative aspect-[3/4] bg-black rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+            <div className="relative aspect-[3/4] bg-black rounded-3xl overflow-hidden shadow-2xl border-4 border-muted">
                {!isCameraOpen ? (
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
                     <Camera className="w-16 h-16 mb-4 opacity-20" />
-                    <Button onClick={startCamera} variant="secondary" className="gap-2">
-                      <Camera className="w-4 h-4" /> Start Camera
+                    <Button onClick={startCamera} variant="secondary" className="rounded-full px-8">
+                      Open Camera
                     </Button>
                   </div>
                 ) : (
                   <>
                     <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover" />
-                    <div className="absolute bottom-8 inset-x-0 flex flex-col items-center gap-4">
-                      <button 
-                        onClick={useThaparLocation}
-                        className="w-20 h-20 bg-white rounded-full border-4 border-white/30 flex items-center justify-center hover:scale-105 transition-transform shadow-lg group"
-                      >
-                        <div className="w-16 h-16 bg-red-500 rounded-full group-active:scale-90 transition-transform" />
+                    <div className="absolute bottom-10 inset-x-0 flex flex-col items-center gap-6">
+                      <button onClick={useThaparLocation} className="w-20 h-20 bg-white rounded-full p-1 shadow-2xl">
+                        <div className="w-full h-full rounded-full border-4 border-black/10 bg-red-600 flex items-center justify-center">
+                          <div className="w-6 h-6 bg-white/20 rounded-full animate-pulse" />
+                        </div>
                       </button>
-                      <div className="bg-black/50 backdrop-blur-md px-3 py-1 rounded-full text-xs text-white/80 flex items-center gap-2">
-                        <MapPin className="w-3 h-3" />
-                        <span>Auto-tagging: TIET Patiala</span>
-                      </div>
+                      <Badge className="bg-black/60 backdrop-blur-md border-white/20 px-4 py-1.5 flex gap-2">
+                        <MapPin className="w-3.5 h-3.5 text-blue-400" /> TIET Patiala
+                      </Badge>
                     </div>
                   </>
                 )}
@@ -1252,43 +1634,32 @@ export default function Report() {
           </div>
         )}
 
-        {/* RESULTS VIEW */}
+        {/* Results View */}
         {selectedImage && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-            <Card className="overflow-hidden glass-card">
-              <div className="relative h-64">
+            <Card className="overflow-hidden border-none shadow-xl">
+              <div className="relative h-72">
                 <img src={selectedImage} alt="Captured" className="w-full h-full object-cover" />
                 {!isSubmitted && (
-                  <Button size="icon" variant="destructive" className="absolute top-2 right-2 rounded-full" onClick={handleRetake}>
+                  <Button size="icon" variant="destructive" className="absolute top-4 right-4 rounded-full" onClick={handleRetake}>
                     <RefreshCw className="w-4 h-4" />
                   </Button>
                 )}
               </div>
               
-              <div className="p-4">
-                <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                        <MapPin className="w-4 h-4 text-primary" />
-                        Incident Location
+              <div className="p-5">
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                        <MapPin className="w-4 h-4 text-primary" /> Incident Site
                     </div>
-                    <Badge variant="outline" className="gap-1 bg-primary/5">
-                        <Building2 className="w-3 h-3" /> TIET Patiala
-                    </Badge>
+                    <Badge variant="secondary">Verified Location</Badge>
                 </div>
                 
                 {location && (
-                  <div className="h-[180px] w-full rounded-lg overflow-hidden border border-border relative z-0">
-                    <MapContainer 
-                      center={[location.lat, location.lng]} 
-                      zoom={16} 
-                      style={{ height: "100%", width: "100%" }}
-                      dragging={false}
-                      zoomControl={false}
-                    >
+                  <div className="h-[180px] w-full rounded-2xl overflow-hidden border relative z-0">
+                    <MapContainer center={[location.lat, location.lng]} zoom={16} style={{ height: "100%", width: "100%" }} zoomControl={false}>
                       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                      <Marker position={[location.lat, location.lng]}>
-                        <Popup>Thapar Campus</Popup>
-                      </Marker>
+                      <Marker position={[location.lat, location.lng]} />
                       <ChangeView center={[location.lat, location.lng]} />
                     </MapContainer>
                   </div>
@@ -1297,39 +1668,63 @@ export default function Report() {
             </Card>
 
             {!detectionResult ? (
-              <Button size="lg" className="w-full h-14 gap-2 text-lg shadow-lg" onClick={analyzeImage} disabled={isAnalyzing}>
+              <Button size="lg" className="w-full h-16 gap-3 text-lg rounded-2xl shadow-lg transition-all active:scale-95" onClick={analyzeImage} disabled={isAnalyzing}>
                 {isAnalyzing ? (
                   <>
-                    <Loader2 className="animate-spin w-5 h-5" />
-                    AI is Analyzing...
+                    <Loader2 className="animate-spin w-6 h-6" /> AI Analyzing Water...
                   </>
                 ) : (
                   <>
-                    <AlertTriangle className="w-5 h-5" />
-                    Scan for Pollutants
+                    <AlertTriangle className="w-6 h-6" /> Detect Pollution
                   </>
                 )}
               </Button>
             ) : (
-               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
-                 <Card className="border-primary/50 bg-primary/5">
-                   <CardHeader className="pb-2">
-                     <CardTitle className="text-sm uppercase tracking-wider text-muted-foreground">Detection Results</CardTitle>
+               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-4">
+                 <Card className={`border-2 ${detectionResult.levelColor} overflow-hidden`}>
+                   <CardHeader className="pb-2 bg-white/50">
+                     <CardTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground">AI Intelligence Report</CardTitle>
                    </CardHeader>
-                   <CardContent>
-                      <div className="flex justify-between items-center bg-background/50 p-4 rounded-xl mb-4 border border-border">
-                          <span className="font-medium">Identified Plastic Items</span>
-                          <span className="text-2xl font-bold text-primary">{detectionResult.plasticCount}</span>
+                   <CardContent className="p-6 space-y-6">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="text-sm font-medium opacity-70">Pollution Index</p>
+                          <h2 className="text-5xl font-black">{detectionResult.pollutionScore}<span className="text-xl opacity-40">/100</span></h2>
+                        </div>
+                        <div className="text-5xl">{detectionResult.levelIcon}</div>
                       </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                         <div className="bg-white/40 p-3 rounded-xl border">
+                            <p className="text-[10px] uppercase font-bold text-muted-foreground">Confidence</p>
+                            <p className="text-lg font-bold">{(detectionResult.confidence * 100).toFixed(0)}%</p>
+                         </div>
+                         <div className="bg-white/40 p-3 rounded-xl border">
+                            <p className="text-[10px] uppercase font-bold text-muted-foreground">Status</p>
+                            <p className="text-lg font-bold">{detectionResult.pollutionLevel.split(' ')[0]}</p>
+                         </div>
+                      </div>
+
+                      <div>
+                        <p className="text-xs font-bold uppercase text-muted-foreground mb-2">Detected Objects</p>
+                        <div className="flex flex-wrap gap-2">
+                          {detectionResult.items.map((item, idx) => (
+                            <Badge key={idx} variant="outline" className="bg-background/50 border-primary/20">{item}</Badge>
+                          ))}
+                          {detectionResult.algaeFound && <Badge className="bg-green-600">Algae Bloom</Badge>}
+                        </div>
+                      </div>
+
                       {!isSubmitted ? (
-                          <Button className="w-full h-12 gap-2" size="lg" onClick={handleSubmitReport}>
-                            <Send className="w-4 h-4" /> Submit to Authority Panel
+                          <Button className="w-full h-14 gap-2 rounded-xl text-lg shadow-xl" size="lg" onClick={handleSubmitReport}>
+                            <Send className="w-5 h-5" /> Dispatch Report
                           </Button>
                       ) : (
-                          <div className="bg-green-500/10 border border-green-500/20 p-4 rounded-xl text-green-600 font-bold text-center flex flex-col items-center gap-2">
-                              <CheckCircle className="w-8 h-8" />
-                              <div className="text-sm">Report Successfully Transmitted</div>
-                              <Link to="/" className="text-xs underline mt-2 text-green-700">Return to Dashboard</Link>
+                          <div className="bg-green-500/10 border border-green-500/20 p-6 rounded-2xl text-center">
+                              <CheckCircle className="w-12 h-12 text-green-600 mx-auto mb-3" />
+                              <h3 className="text-green-600 font-bold text-lg">Report Transmitted</h3>
+                              <p className="text-sm text-green-700 opacity-80 mb-4">{detectionResult.adminAction}</p>
+                              <Link to="/" className="text-sm font-bold underline text-green-700">Go to Dashboard</Link>
                           </div>
                       )}
                    </CardContent>
