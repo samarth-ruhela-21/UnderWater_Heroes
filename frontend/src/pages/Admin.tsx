@@ -361,7 +361,6 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////////////
-
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -399,8 +398,28 @@ interface EmailLog {
   status: 'sent' | 'pending';
 }
 
+// Helper function to get pollution level details
+function getPollutionDetails(score: number): {
+  level: string;
+  color: string;
+  icon: string;
+  severity: 'Low' | 'Medium' | 'High' | 'Critical' | 'Emergency';
+} {
+  if (score <= 20) {
+    return { level: 'Clean / Safe', color: 'text-green-400', icon: '🟢', severity: 'Low' };
+  } else if (score <= 40) {
+    return { level: 'Slightly Polluted', color: 'text-yellow-400', icon: '🟡', severity: 'Medium' };
+  } else if (score <= 60) {
+    return { level: 'Moderately Polluted', color: 'text-orange-400', icon: '🟠', severity: 'High' };
+  } else if (score <= 80) {
+    return { level: 'Highly Polluted', color: 'text-red-400', icon: '🔴', severity: 'Critical' };
+  } else {
+    return { level: 'Severely Polluted', color: 'text-purple-400', icon: '☢️', severity: 'Emergency' };
+  }
+}
+
 export default function Admin() {
-  const [reports, setReports] = useState<UserReport[]>([]);
+  const [reports, setReports] = useState<any[]>([]);
   const [emailLogs, setEmailLogs] = useState<EmailLog[]>([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [droneAnimating, setDroneAnimating] = useState<string | null>(null);
@@ -415,17 +434,25 @@ export default function Admin() {
     // 2. Get the real data submitted via the Report file
     const localData = JSON.parse(localStorage.getItem('user-reports') || '[]');
     
-    // 3. Format localData to match the UserReport interface
+    // 3. Format localData to match the expected interface
     const formattedLocalData = localData.map((report: any) => ({
       ...report,
       id: report.id,
       timestamp: new Date(report.timestamp),
-      // Ensure it has all properties expected by the UI
-      actionTaken: report.actionTaken || 'Pending'
+      actionTaken: report.actionTaken || 'Pending',
+      // Support both old (plasticCount) and new (pollutionScore) formats
+      pollutionScore: report.pollutionScore || (report.plasticCount ? report.plasticCount * 10 : 50),
+      plasticCount: report.plasticCount || Math.floor((report.pollutionScore || 50) / 10)
     }));
 
-    // 4. Combine (Local submissions at the top)
-    setReports([...formattedLocalData, ...mockData]);
+    // 4. Format mock data to include pollution scores
+    const formattedMockData = mockData.map((report: any) => ({
+      ...report,
+      pollutionScore: report.pollutionScore || (report.plasticCount ? report.plasticCount * 10 : 50)
+    }));
+
+    // 5. Combine (Local submissions at the top)
+    setReports([...formattedLocalData, ...formattedMockData]);
     
     setTimeout(() => setIsRefreshing(false), 600);
   };
@@ -437,7 +464,7 @@ export default function Admin() {
         id: 'E001',
         to: 'port-authority@patiala.gov.in',
         subject: 'THAPAR CAMPUS POLLUTION ALERT',
-        body: 'Manual report received. Plastic accumulation detected near campus lake.',
+        body: 'Manual report received. Pollution detected near campus lake.',
         timestamp: new Date(Date.now() - 1000 * 60 * 10),
         status: 'sent',
       }
@@ -453,7 +480,7 @@ export default function Admin() {
     
     setReports((prev) =>
       prev.map((r) =>
-        r.id === reportId ? { ...r, actionTaken: 'Drone Dispatched' as const } : r
+        r.id === reportId ? { ...r, actionTaken: 'Drone Dispatched' } : r
       )
     );
 
@@ -465,7 +492,7 @@ export default function Admin() {
     setTimeout(() => {
       setReports((prev) => {
         const updated = prev.map((r) =>
-          r.id === reportId ? { ...r, actionTaken: 'Resolved' as const } : r
+          r.id === reportId ? { ...r, actionTaken: 'Resolved' } : r
         );
         
         // Sync back to local storage so the status stays "Resolved"
@@ -486,11 +513,13 @@ export default function Admin() {
     const report = reports.find((r) => r.id === reportId);
     if (!report) return;
 
+    const pollutionInfo = getPollutionDetails(report.pollutionScore || 50);
+
     const newEmail: EmailLog = {
       id: `E${emailLogs.length + 1}`.padStart(4, '0'),
       to: 'campus-alerts@tiet.edu',
-      subject: `Environment Advisory - TIET`,
-      body: `Cleanup drones are active at ${report.location.lat.toFixed(3)}, ${report.location.lng.toFixed(3)}. Please avoid the area.`,
+      subject: `Environment Advisory - ${pollutionInfo.level}`,
+      body: `Cleanup drones are active at ${report.location.lat.toFixed(3)}, ${report.location.lng.toFixed(3)}. Pollution level: ${pollutionInfo.level}. Please avoid the area.`,
       timestamp: new Date(),
       status: 'sent',
     };
@@ -510,12 +539,6 @@ export default function Admin() {
       default:
         return <Badge variant="outline">{action}</Badge>;
     }
-  };
-
-  const getSeverity = (count: number) => {
-    if (count > 7) return { label: 'High', color: 'text-red-400' };
-    if (count > 3) return { label: 'Medium', color: 'text-orange-400' };
-    return { label: 'Low', color: 'text-green-400' };
   };
 
   return (
@@ -584,7 +607,8 @@ export default function Admin() {
                     <TableRow className="bg-muted/30 hover:bg-muted/30">
                       <TableHead className="pl-6">Origin ID</TableHead>
                       <TableHead>Location</TableHead>
-                      <TableHead>Items</TableHead>
+                      <TableHead>Pollution Score</TableHead>
+                      <TableHead>Level</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead className="text-right pr-6">Action</TableHead>
                     </TableRow>
@@ -592,7 +616,7 @@ export default function Admin() {
                   <TableBody>
                     <AnimatePresence mode="popLayout">
                       {reports.map((report) => {
-                        const severity = getSeverity(report.plasticCount);
+                        const pollutionInfo = getPollutionDetails(report.pollutionScore || 50);
                         const isUserReport = report.id.startsWith('USR-');
 
                         return (
@@ -612,9 +636,17 @@ export default function Admin() {
                               </div>
                             </TableCell>
                             <TableCell>
-                              <span className={`text-sm font-semibold ${severity.color}`}>
-                                {report.plasticCount} Units
-                              </span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-lg">{pollutionInfo.icon}</span>
+                                <span className={`text-sm font-bold ${pollutionInfo.color}`}>
+                                  {report.pollutionScore || 50}
+                                </span>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant="outline" className={`text-xs ${pollutionInfo.color} border-current/30 bg-current/10`}>
+                                {pollutionInfo.severity}
+                              </Badge>
                             </TableCell>
                             <TableCell>{getActionBadge(report.actionTaken)}</TableCell>
                             <TableCell className="text-right pr-6">
