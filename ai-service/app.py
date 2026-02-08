@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from ultralytics import YOLO
 import cv2
-import numpy as np
+import numpy as pipnp
 # Ensure you have the utils folder with image_proc.py
 from utils.image_proc import detect_algae_bloom, estimate_microplastics
 
@@ -15,11 +15,11 @@ CORS(app)
 MODEL_PATH = os.path.join("models", "best_underwater.pt")
 
 if os.path.exists(MODEL_PATH):
-    print(f"✅ Loading Custom Local Model (YOLOv11): {MODEL_PATH}")
+    print(f"[OK] Loading Custom Local Model (YOLOv11): {MODEL_PATH}")
     model = YOLO(MODEL_PATH)
 else:
-    print("⚠️ Custom model not found. Run 'scripts/2_train_local.py' first!")
-    print("➡️ Falling back to standard YOLOv11n (Surface Plastic only).")
+    print("[WARNING] Custom model not found. Run 'scripts/2_train_local.py' first!")
+    print("[INFO] Falling back to standard YOLOv11n (Surface Plastic only).")
     model = YOLO("yolo11n.pt") 
 
 @app.route('/analyze', methods=['POST'])
@@ -68,6 +68,10 @@ def analyze():
             "microplastic_risk": micro
         }
     })
+
+@app.route('/')
+def home():
+    return "Hello, World! The server is working."
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
